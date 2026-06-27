@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adams Family · JFL Montréal — Vote</title>
+<!--
+  ============================================================================
+  SHARED VOTING SETUP (optional, for your GitHub-hosted site)
+  ----------------------------------------------------------------------------
+  As-is, this page saves votes on each person's device (good for trying it out,
+  but everyone sees only their own picks). To share votes across the whole
+  family on your GitHub site, add a FREE Firebase Realtime Database:
+
+    1. Go to console.firebase.google.com -> "Add project" (any name).
+    2. Build -> Realtime Database -> Create database -> start in "test mode".
+    3. Project settings (gear) -> "Your apps" -> Web (</>) -> register app.
+    4. Copy the firebaseConfig values into FIREBASE_CONFIG below (keep the
+       databaseURL line — that's the one that matters).
+    5. Save, commit, done. Votes now sync live for everyone who opens the page.
+
+  Leave FIREBASE_CONFIG = null to keep device-only mode.
+  ============================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night-1:#1d1233; --night-2:#2a1747; --night-3:#3a2160;
+    --cream:#F7F1E4; --cream-2:#ECE3D0; --ink:#241a2e; --ink-soft:#6b5e74;
+    --coral:#FF6B5C; --yellow:#FFC23C; --grape:#7C5BC9; --teal:#2BB3A3; --gold:#E0A52B;
+    --line:#d8cdb6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--cream);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #45286f 0%, rgba(69,40,111,0) 60%),
+      linear-gradient(180deg,var(--night-1) 0%, var(--night-2) 55%, var(--night-1) 100%);
+    background-attachment:fixed;min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:22px 16px 64px;}
+  .bulbs{display:flex;gap:10px;justify-content:center;padding:6px 0 14px;}
+  .bulb{width:9px;height:9px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #FFF1C2, var(--yellow) 55%, #b9842a 100%);
+    box-shadow:0 0 10px 1px rgba(255,194,60,.55);}
+  @keyframes flick{0%,100%{opacity:1}50%{opacity:.45}}
+  @media (prefers-reduced-motion:no-preference){
+    .bulb:nth-child(2n){animation:flick 2.6s ease-in-out infinite}
+    .bulb:nth-child(3n){animation:flick 3.4s ease-in-out infinite .4s}
+  }
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:clamp(30px,8vw,46px);line-height:.98;letter-spacing:-.5px;text-align:center;margin:0;text-wrap:balance;}
+  h1 .pop{color:var(--yellow);}
+  .sub{font-family:'Space Mono',monospace;text-align:center;color:#cbb9ec;font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;margin:12px 0 0;}
+  .how{text-align:center;color:#bcacd8;font-size:13.5px;margin:14px auto 0;max-width:460px;line-height:1.5;}
+
+  .who{margin:24px 0 6px;}
+  .who-lbl{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9c8dc0;text-align:center;margin-bottom:11px;}
+  .people{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .person{border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:var(--cream);
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;padding:9px 16px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s;}
+  .person:hover{border-color:rgba(255,255,255,.4);}
+  .person .ini{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#1a1226;}
+  .person.active{background:var(--cream);color:var(--ink);border-color:var(--cream);}
+  .status{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+  .refresh{background:none;border:none;color:#a99ac9;font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:.5px;text-decoration:underline;text-underline-offset:3px;}
+  .modepill{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.2);color:#bcacd8;}
+  .banner{font-family:'Space Mono',monospace;font-size:11.5px;color:#241a2e;background:var(--yellow);border-radius:8px;padding:9px 12px;margin:14px 0 0;text-align:center;line-height:1.5;}
+
+  .sec{display:flex;align-items:center;gap:12px;margin:34px 2px 16px;}
+  .sec h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;letter-spacing:.3px;margin:0;color:#e9def6;white-space:nowrap;}
+  .sec .ln{height:1px;flex:1;background:linear-gradient(90deg,rgba(255,255,255,.22),rgba(255,255,255,0));}
+  .sec .tag{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1px;color:#1a1226;background:var(--yellow);padding:3px 8px;border-radius:5px;text-transform:uppercase;}
+
+  .ticket{background:var(--cream);color:var(--ink);border-radius:16px;margin:0 0 16px;position:relative;box-shadow:0 14px 30px -16px rgba(0,0,0,.6);overflow:hidden;}
+  .ticket.locked{opacity:.62;}
+  .stub-top{display:flex;align-items:baseline;gap:10px;padding:15px 18px 13px;flex-wrap:wrap;}
+  .date{font-family:'Space Mono',monospace;font-weight:700;font-size:12px;letter-spacing:1px;color:#fff;background:var(--ink);padding:5px 9px;border-radius:6px;text-transform:uppercase;}
+  .dtitle{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px;line-height:1.1;}
+  .grp{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);margin-left:auto;border:1px solid var(--line);padding:3px 7px;border-radius:5px;}
+  .perf{position:relative;height:0;border-top:2px dashed var(--line);margin:0 14px;}
+  .perf::before,.perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--night-2);}
+  .perf::before{left:-24px;} .perf::after{right:-24px;}
+  .intro{font-size:13px;color:var(--ink-soft);padding:12px 18px 0;line-height:1.5;}
+
+  .slot{padding:14px 18px 4px;}
+  .slot-lbl{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:9px;}
+  .opt{border:1.5px solid var(--cream-2);border-radius:11px;padding:11px 12px;margin-bottom:9px;cursor:pointer;transition:.14s;background:#fffdf8;}
+  .opt:hover{border-color:#cbb89a;}
+  .opt.mine{border-color:var(--coral);box-shadow:inset 0 0 0 1px var(--coral);background:#fff7f5;}
+  .opt.disabled{cursor:default;}
+  .opt-head{display:flex;align-items:flex-start;gap:9px;}
+  .check{width:20px;height:20px;border-radius:50%;border:2px solid #d3c4a6;flex:none;margin-top:1px;display:grid;place-items:center;font-size:12px;color:#fff;}
+  .check.sq{border-radius:6px;}
+  .opt.mine .check{background:var(--coral);border-color:var(--coral);}
+  .opt-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;line-height:1.2;}
+  .opt-desc{font-size:13px;color:var(--ink-soft);line-height:1.45;margin:3px 0 0;}
+  .opt-meta{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap;}
+  .cost{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--ink);background:var(--cream-2);padding:3px 8px;border-radius:5px;}
+  .lk{font-size:12px;text-decoration:none;font-weight:600;display:inline-flex;gap:4px;align-items:center;}
+  .lk.t{color:#c2185b;} .lk.g{color:var(--grape);} .lk.j{color:#1a1226;}
+  .lk:hover{text-decoration:underline;}
+  .badge{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 7px;border-radius:5px;text-transform:uppercase;}
+  .badge.down{background:#dff3ee;color:#11796a;} .badge.rec{background:#e9e2fb;color:#5b3ea8;}
+  .lead{font-family:'Space Mono',monospace;font-size:10.5px;font-weight:700;color:#1a1226;background:var(--yellow);padding:3px 7px;border-radius:5px;letter-spacing:.5px;}
+  .voters{display:flex;align-items:center;gap:5px;margin-left:auto;}
+  .vini{width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700;color:#1a1226;border:1.5px solid #fff;}
+  .vcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);}
+  .note{font-size:12.5px;color:var(--ink-soft);font-style:italic;padding:2px 18px 16px;}
+  .locktag{font-family:'Space Mono',monospace;font-size:11px;color:#1a1226;background:var(--cream-2);display:inline-block;padding:4px 9px;border-radius:6px;margin:0 18px 14px;}
+  .pin{display:inline-block;background:var(--coral);color:#fff;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;padding:3px 8px;border-radius:5px;margin:0 18px 14px;text-transform:uppercase;font-weight:700;}
+
+  .foot{text-align:center;color:#8d7eae;font-size:12px;margin-top:30px;line-height:1.6;font-family:'Space Mono',monospace;}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--cream);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;border:1px solid rgba(255,255,255,.15);z-index:9;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .pickfirst{text-align:center;color:#cbb9ec;font-size:13px;font-family:'Space Mono',monospace;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);border-radius:10px;padding:11px;margin:18px 0 4px;}
+  .badge.booked{background:#d9f0e0;color:#1c7a45;}
+  .hbody{padding:13px 18px 16px;}
+  .hroom{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14px;margin-bottom:5px;color:var(--ink);}
+  .ticket.travelcard{background:linear-gradient(180deg,#fff5e9,#F7F1E4);}
+  .timeline{margin:10px 20px 14px;padding-left:18px;}
+  .timeline li{font-size:13px;color:var(--ink);line-height:1.65;margin-bottom:3px;}
+  .timeline li::marker{color:var(--coral);}
+  .panel{margin:0 0 14px;}
+  .panel-head{width:100%;display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--cream);
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16px;padding:15px 16px;cursor:pointer;text-align:left;border-radius:13px;transition:.15s;}
+  .panel-head:hover{background:rgba(255,255,255,.12);}
+  .panel.open .panel-head{border-radius:13px 13px 0 0;border-bottom-color:transparent;}
+  .chev{font-size:11px;color:var(--yellow);width:13px;flex:none;}
+  .panel-title{flex:1;}
+  .panel-count{font-family:'Space Mono',monospace;font-size:11px;color:#cbb9ec;}
+  .panel-tag{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1px;color:#1a1226;background:var(--yellow);padding:3px 8px;border-radius:5px;text-transform:uppercase;}
+  .panel-body{padding:10px 0 2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bulbs" id="bulbs"></div>
+  <h1>ADAMS FAMILY<br><span class="pop">JFL Montréal</span> '26</h1>
+  <p class="sub">Pick your nights · tap to vote</p>
+  <p class="how">Choose who you are, then tap everything you\u2019d be happy with — pick as many as you like, for restaurants and nights alike. Tap again to undo.</p>
+
+  <div class="who">
+    <div class="who-lbl">Who are you?</div>
+    <div class="people" id="people"></div>
+    <div class="status">
+      <button class="refresh" id="refresh">↻ Refresh votes</button>
+      <span class="modepill" id="modepill">…</span>
+    </div>
+    <div id="banner"></div>
+  </div>
+
+  <div id="board"></div>
+
+  <p class="foot">Built for the trip · July 17–26, 2026<br>Later days fill in as we plan them</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== paste your Firebase config object here to turn on shared voting ======
+const FIREBASE_CONFIG = null;
+// e.g. { apiKey:"…", authDomain:"…", databaseURL:"https://yourproj-default-rtdb.firebaseio.com", projectId:"…", appId:"…" };
+
+const VOTERS = [
+  {name:'Vanessa', color:'#FF6B5C'},
+  {name:'Erik',    color:'#2BB3A3'},
+  {name:'Sierra',  color:'#8B5CF6'},
+  {name:'Savannah',color:'#E0A52B'}
+];
+const colorOf = n => (VOTERS.find(v=>v.name===n)||{}).color || '#999';
+const ini = n => n[0];
+const g  = q => 'https://www.google.com/search?q=' + encodeURIComponent(q + ' Montreal');
+const tk = q => 'https://www.tiktok.com/search?q=' + encodeURIComponent(q + ' Montreal');
+const JFL = 'https://montreal.hahaha.com/en';
+
+// ---------- Restaurant shortlist (multi-select) ----------
+// To pin a SPECIFIC link to any item, add a 'site' (official website / ticket page)
+// and/or 'vid' (a specific TikTok or YouTube URL), e.g.:
+//   { id:'x', name:'…', site:'https://restaurant.com',
+//     vid:'https://www.tiktok.com/@someone/video/1234567890', … }
+// When present, these replace the default search links (shown as "🔗 Website" / "▶ Video").
+// Leave them off and the item falls back to a quick search link instead.
+const RESTAURANTS = [
+  {id:'timeout', name:'Time Out Market', desc:'Downtown (Centre Eaton) · food hall, a dozen great kitchens under one roof — easy when everyone wants something different.', cost:'$$', q:'Time Out Market Montreal'},
+  {id:'jatoba',  name:'Jatoba', desc:'Downtown · sleek Asian-inspired, consistently outstanding — good for a special night.', cost:'$$$', q:'Jatoba restaurant Montreal'},
+  {id:'celeste', name:'Celeste', desc:'Downtown (Maison Alcan) · buzzy 2026 Italian, striking room, house-made pasta.', cost:'$$$', q:'Celeste restaurant Maison Alcan Montreal'},
+  {id:'apdc',    name:'Au Pied de Cochon', desc:'Plateau · decadent, festive Québécois — the legendary blow-out dinner.', cost:'$$$', site:'https://www.aupieddecochon.ca/', q:'Au Pied de Cochon Montreal'},
+  {id:'lexpress',name:"L'Express", desc:'Plateau · the classic Parisian-style bistro, a Montréal institution.', cost:'$$', q:"L'Express bistro Montreal"},
+  {id:'violon',  name:'Le Violon', desc:'Plateau · fancy-but-not-stuffy, warm service, much-loved newcomer.', cost:'$$$', q:'Le Violon restaurant Montreal'},
+  {id:'schwartz',name:"Schwartz's Deli", desc:'The Main · legendary smoked-meat sandwich since 1928. A lunch rite of passage.', cost:'$', site:'https://schwartzsdeli.com/', q:"Schwartz's Deli Montreal smoked meat"},
+  {id:'banquise',name:'La Banquise', desc:'Plateau · iconic poutine, 30+ versions, open late. Fun and casual.', cost:'$', q:'La Banquise poutine Montreal'},
+  {id:'beautys', name:'Beautys', desc:'Plateau · classic Jewish diner brunch since 1942 — the Mish-Mash omelette.', cost:'$', q:'Beautys Montreal brunch'},
+];
+
+// ---------- Québec City restaurant shortlist (multi-select) ----------
+const QC_RESTAURANTS = [
+  {id:'anciens', name:'Aux Anciens Canadiens', desc:'Old Québec · traditional Québécois in a 1676 house, the oldest in the city. Tourtière, game, maple.', cost:'$$$', site:'https://auxancienscanadiens.qc.ca/', q:'Aux Anciens Canadiens Quebec City'},
+  {id:'lapin', name:'Le Lapin Sauté', desc:'Petit-Champlain · cozy rabbit & Québécois comfort food, lovely summer terrace.', cost:'$$', q:'Le Lapin Saute Quebec City'},
+  {id:'continental', name:'Le Continental', desc:'Old Québec · tableside flambé, old-school chic — a classic since 1956.', cost:'$$$', q:'Le Continental restaurant Quebec City'},
+  {id:'boulay', name:'Chez Boulay', desc:'Old Québec · boreal cuisine, modern Québécois built on northern terroir.', cost:'$$$', q:'Chez Boulay bistro boreal Quebec City'},
+  {id:'sagamite', name:'Sagamité', desc:'Old Québec · Indigenous & game (bison, elk, venison), dramatic flaming dishes.', cost:'$$', q:'Sagamite restaurant Quebec City'},
+  {id:'ouroboros', name:'Ouroboros', desc:'Saint-Roch (near PUR) · creative market cooking, Michelin Bib Gourmand.', cost:'$$$', q:'Ouroboros restaurant Quebec City Saint-Roch'},
+  {id:'ashton', name:'Chez Ashton', desc:'Old Québec · the Québec City poutine institution. Fast, casual, beloved.', cost:'$', q:'Chez Ashton poutine Quebec City'},
+  {id:'cochon', name:'Cochon Dingue', desc:'Casual French-Canadian brasserie — family-friendly, generous portions.', cost:'$$', q:'Cochon Dingue Quebec City'},
+];
+
+// ---------- Confirmed hotels (reference, not votable) ----------
+// Confirmation numbers are intentionally NOT stored here — this file is public.
+const HOTELS = [
+  {name:'Le Centre Sheraton Montréal', dates:'Jul 17 – 27 · 10 nights', room:'Deluxe — 1 King + sofa bed, high floor', note:'M Club lounge (37th floor): Platinum breakfast + evening apps. Walking distance to every festival venue.', q:'Le Centre Sheraton Montreal'},
+  {name:'Hôtel PUR Québec (Tribute)', dates:'Jul 27 – Aug 1 · 5 nights', room:'King Guest Room (cash)', note:'Saint-Roch district. Platinum breakfast, no lounge. ~15–20 min uphill walk to Old Québec.', q:'Hotel PUR Quebec Tribute Portfolio'},
+  {name:'Hôtel PUR Québec (Tribute)', dates:'Jul 27 – Aug 1 · 5 nights', room:'2 Queen Guest Room (points)', note:'Second room on points — book-4-get-5th-free. The girls\u2019 room.', q:'Hotel PUR Quebec Tribute Portfolio'},
+];
+
+// ---------- Flights (reference, not votable) — no record locators on a public page ----------
+const FLIGHTS = [
+  {date:'Fri Jul 17', dir:'Outbound · Vanessa, Erik, Sierra', legs:['AC 1093 · Orlando (MCO) → Montréal (YUL) · 7:00a–10:17a'], note:'Vanessa & Erik in business (2D / 2F) · Sierra in economy (23C).'},
+  {date:'Thu Jul 23', dir:'Outbound · Savannah', legs:['Orlando (MCO) → Montréal (YUL) · Economy Flex'], note:'Flight number & times — confirm from Savannah\u2019s itinerary.'},
+  {date:'Fri Jul 31', dir:'Home · Erik', legs:['AC 1133 · Québec (YQB) → Toronto (YYZ) · 5:00a–6:34a','AC 1670 · Toronto (YYZ) → Orlando (MCO) · 8:00a–10:50a'], note:'Clears U.S. customs in Toronto. Very early start.'},
+  {date:'Sat Aug 1', dir:'Home · Vanessa, Savannah, Sierra', legs:['AA 5631 · Québec (YQB) → Philadelphia (PHL) · 4:12p–6:14p','AA 3268 · Philadelphia (PHL) → Orlando (MCO) · 7:35p–10:43p'], note:'~1h21m PHL connection — first U.S. entry; Global Entry helps.'},
+];
+
+// ---------- Fun & out-of-the-ordinary (multi-select) ----------
+const FUN = [
+  {id:'virtualroom', name:'Virtual Room — Montréal', desc:'Old Montréal · team VR adventure — all four together in one virtual world. A big group hit.', cost:'~$40 CAD/pp', q:'Virtual Room Montreal'},
+  {id:'quizroom', name:'Quiz Room — Montréal', desc:'A live TV game-show with buzzers and lights. Competitive, hilarious, genuinely different.', cost:'~$25 CAD/pp', q:'Quiz Room Montreal'},
+  {id:'escapemtl', name:'Escape room — Montréal', desc:'Lots downtown/Plateau (e.g. Échappe-Toi). A 60-min puzzle race for the four of you.', cost:'~$30 CAD/pp', q:'escape room Montreal Echappe-Toi'},
+  {id:'defievasion', name:'Défi-Évasion — Québec City', desc:'13+ escape rooms, family-friendly. Heads-up: open Wed–Sun (closed Mon/Tue).', cost:'~$28 CAD/pp', q:'Defi-Evasion Quebec City escape room'},
+  {id:'adventurecity', name:'Adventure City Games — Québec City', desc:'Phone-led outdoor mystery walk through Old Québec — explore and solve as you go.', cost:'~$25 CAD/group', q:'Adventure City Games Quebec'},
+];
+
+// group: 'trio' = Vanessa/Erik/Sierra (Jul 17–22) · 'all' = everyone (Jul 23+)
+const DAYS = [
+  {id:'d1', date:'Fri Jul 17', title:'Arrival day', group:'trio', slots:[
+    {id:'d1n', label:'Tonight', opts:[
+      {id:'nasty', name:'The Nasty Show', desc:'9:30pm, Club Soda (~12-min walk). Very raunchy, adults-only comedy.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
+      {id:'outdoor', name:'Free outdoor comedy', desc:'Place des Festivals, right outside the hotel. Come & go.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+      {id:'chill', name:'Chill night in', desc:'Dinner nearby + the 37th-floor M Club lounge, early night after the 4am wakeup.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal M Club'},
+    ]}
+  ], note:'Land YUL 10:17am \u2014 taxi/Uber ~25 min (~$45\u201350 CAD) downtown; room ready ~3pm.'},
+  {id:'d2', date:'Sat Jul 18', title:'First full day', group:'trio', slots:[
+    {id:'d2d', label:'Daytime', opts:[
+      {id:'oldmtl', name:'Old Montréal', desc:'Notre-Dame Basilica, the Old Port, cobblestone streets.', cost:'Basilica ~$15', q:'Old Montreal Notre-Dame Basilica'},
+      {id:'mtroyal', name:'Mount Royal', desc:'Hike or quick Uber up to the lookout over the whole city.', cost:'Free', tag:'rec', q:'Mount Royal Kondiaronk lookout'},
+    ]},
+    {id:'d2n', label:'Tonight', opts:[
+      {id:'nasty', name:'The Nasty Show', desc:'Final night, 9:30pm — if we skipped Friday.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
+      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Raunchy hockey rom-com staged musical, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
+      {id:'dinner', name:'Dinner out (from the shortlist) + free outdoor comedy', desc:'A proper dinner, then wander the festival grounds.', cost:'—', q:'best restaurants Quartier des Spectacles'},
+    ]}
+  ]},
+  {id:'d3', date:'Sun Jul 19', title:'Markets & last openers', group:'trio', slots:[
+    {id:'d3d', label:'Daytime', opts:[
+      {id:'mileend', name:'Mile End + markets food crawl', desc:'Bagels (St-Viateur/Fairmount), Schwartz\u2019s smoked meat, Jean-Talon Market.', cost:'pay as you go', q:'Mile End Jean-Talon Market Schwartz\u2019s'},
+      {id:'leftover', name:'Old Montréal or Mount Royal', desc:'Whichever one we didn\u2019t do Saturday.', cost:'varies', q:'things to do Old Montreal Mount Royal'},
+    ]},
+    {id:'d3n', label:'Tonight (last comedy openers)', opts:[
+      {id:'nasty', name:'The Nasty Show', desc:'Its final night, 9:30pm.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
+      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Final night, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
+      {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night on the festival grounds.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+    ]}
+  ]},
+  {id:'d4', date:'Mon Jul 20', title:'Quiet comedy night · dinner night', group:'trio', slots:[
+    {id:'d4d', label:'Daytime', opts:[
+      {id:'bota', name:'Bota Bota spa', desc:'Nordic spa on a boat in the Old Port. Pure relaxation.', cost:'~$70–100 CAD', tag:'down', q:'Bota Bota spa Montreal'},
+      {id:'mmfa', name:'Museum of Fine Arts + Golden Square Mile', desc:'Walkable from the hotel.', cost:'~$24 CAD', q:'Montreal Museum of Fine Arts'},
+    ]},
+    {id:'d4n', label:'Tonight — the proper dinner out', opts:[
+      {id:'jatoba', name:'Jatoba', desc:'Sleek Asian-inspired, downtown, near the hotel.', cost:'$$$', q:'Jatoba restaurant Montreal'},
+      {id:'celeste', name:'Celeste', desc:'Buzzy 2026 Italian in a stunning room, downtown.', cost:'$$$', q:'Celeste restaurant Maison Alcan Montreal'},
+      {id:'apdc', name:'Au Pied de Cochon', desc:'Decadent, festive Québécois — the blow-out.', cost:'$$$', site:'https://www.aupieddecochon.ca/', q:'Au Pied de Cochon Montreal'},
+      {id:'outdoor', name:'Casual + free outdoor comedy', desc:'Keep it low-key tonight.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+    ]}
+  ]},
+  {id:'d5', date:'Tue Jul 21', title:'Comedy ramps back up', group:'trio', slots:[
+    {id:'d5d', label:'Daytime', opts:[
+      {id:'plateau', name:'Plateau Mont-Royal', desc:'Murals, Avenue Mont-Royal, Parc La Fontaine.', cost:'Free', q:'Plateau Mont-Royal things to do'},
+      {id:'lachine', name:'Lachine Canal bike + Atwater Market', desc:'Easy waterfront ride to a great market. Active but relaxed.', cost:'~$15 bike', tag:'rec', q:'Lachine Canal bike Atwater Market'},
+      {id:'olympic', name:'Olympic Park + Botanical Garden', desc:'Space for Life: Biodôme, Insectarium.', cost:'~$45 CAD', q:'Montreal Botanical Garden Biodome Olympic Park'},
+    ]},
+    {id:'d5n', label:'Tonight', opts:[
+      {id:'nasty', name:'The Nasty Show (added night)', desc:'9:30pm, Club Soda — make-up option.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
+      {id:'british', name:'Brit(ish) showcase', desc:'UK / Irish / Commonwealth comics, Gesù.', cost:'see site', jfl:true, q:'Brit(ish) Just for Laughs Gesu'},
+      {id:'bamford', name:'Maria Bamford', desc:'Alt-comedy cult favorite, 7pm, Studio TD.', cost:'see site', jfl:true, q:'Maria Bamford Just for Laughs'},
+      {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+    ]}
+  ]},
+  {id:'d6', date:'Wed Jul 22', title:'Last day as a trio · big comedy night', group:'trio', slots:[
+    {id:'d6d', label:'Daytime', opts:[
+      {id:'oldport', name:'Old Port relax', desc:'Bota Bota (if not done) or a stroll + the Ferris wheel.', cost:'varies', tag:'down', q:'Old Port Montreal Grande Roue'},
+      {id:'rest', name:'Pool / hotel + light afternoon', desc:'Deliberate downtime — bank energy before the next two big days.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal pool'},
+    ]},
+    {id:'d6n', label:'Tonight', opts:[
+      {id:'sibling', name:'Sibling Rivalry Live', desc:'Bob the Drag Queen + Monét X Change, L\u2019Olympia, 9:30pm.', cost:'~$55–85 CAD', jfl:true, q:'Sibling Rivalry Live Just for Laughs Olympia'},
+      {id:'midnight', name:'+ Midnight Surprise Show', desc:'11:59pm, Studio TD — surprise A-list drop-ins. A late one!', cost:'see site', jfl:true, q:'Midnight Surprise Show Just for Laughs'},
+      {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Calmer night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+    ]}
+  ]},
+  {id:'d7', date:'Thu Jul 23', title:'Savannah arrives · Seinfeld', group:'all', pin:'Savannah lands today', locked:'★ Locked in: Jerry Seinfeld Live — 6:30pm, Salle Wilfrid-Pelletier', slots:[
+    {id:'d7n', label:'After Seinfeld (optional)', opts:[
+      {id:'funches', name:'Ron Funches', desc:'Feel-good star (Loot, Inside Out 2), 9:30pm, Gesù.', cost:'see site', jfl:true, q:'Ron Funches Just for Laughs'},
+      {id:'smosh', name:'Smosh Reads Reddit Stories Live', desc:'Viral YouTube crew live — fun for the girls. Tonight only.', cost:'see site', jfl:true, q:'Smosh Reads Reddit Stories Live Just for Laughs'},
+      {id:'welcome', name:'Welcome dinner for Savannah', desc:'Keep it easy — a shortlist spot, everyone together.', cost:'—', q:'best restaurants Montreal downtown'},
+    ]}
+  ], note:'Savannah lands this morning — leave airport-pickup + transfer time before the 6:30 Seinfeld show.'},
+  {id:'d8', date:'Fri Jul 24', title:'Gala night', group:'all', slots:[
+    {id:'d8n', label:'Pick your gala / show (an early + a 9:30 pair nicely)', opts:[
+      {id:'birbiglia', name:'Mike Birbiglia Gala', desc:'Hosted gala, 6:30pm, Théâtre Maisonneuve.', cost:'see site', jfl:true, q:'Mike Birbiglia gala Just for Laughs'},
+      {id:'atsuko', name:'Atsuko Okatsuka Gala', desc:'Hosted gala, 9:30pm, Théâtre Maisonneuve.', cost:'see site', jfl:true, q:'Atsuko Okatsuka gala Just for Laughs'},
+      {id:'awards', name:'JFL Awards Show', desc:'Star-studded awards night, MTELUS.', cost:'see site', jfl:true, q:'Just for Laughs Awards Show MTELUS'},
+      {id:'gge', name:'Girls Gotta Eat', desc:'Hit dating/relationships podcast live, 9:30pm, Club Soda.', cost:'see site', jfl:true, q:'Girls Gotta Eat Just for Laughs'},
+      {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
+    ]}
+  ]},
+  {id:'d9', date:'Sat Jul 25', title:'Fluffy vs. Weird Al', group:'all', slots:[
+    {id:'d9n', label:'Both are July-25-only and overlap — so:', opts:[
+      {id:'gerry_al', name:'Gerry Dee gala (6:30) → Weird Al (9pm)', desc:'The only way to get a gala AND all of Weird Al — no conflict. Trades Fluffy for Gerry Dee.', cost:'gala $ + free', jfl:true, q:'Gerry Dee gala Just for Laughs'},
+      {id:'fluffy', name:'Fluffy gala (9:30)', desc:'Catch the start of Weird Al outside (9pm), then walk into Fluffy — venues are steps apart.', cost:'see site', jfl:true, site:'https://www.placedesarts.com/en/event/gabriel-fluffy-iglesias-gala', q:'Gabriel Iglesias Fluffy gala Just for Laughs'},
+      {id:'weirdal', name:'Weird Al — full free show (9pm)', desc:'The whole Bigger & Weirder set, free, Place des Festivals.', cost:'Free', jfl:true, q:'Weird Al Yankovic Just for Laughs Place des Festivals'},
+      {id:'split', name:'Split up — Fluffy + Weird Al', desc:'Some do ticketed Fluffy, some do free Weird Al, regroup after (~3-min walk).', cost:'mixed', q:'Place des Arts Place des Festivals Montreal'},
+    ]}
+  ], note:'Neither Fluffy nor Weird Al plays JFL again — both are July 25 only (9pm vs 9:30pm), so they can\u2019t be split across nights.'},
+  {id:'d10', date:'Sun Jul 26', title:'Last Montréal day', group:'all', slots:[
+    {id:'d10d', label:'Daytime', opts:[
+      {id:'easy', name:'Easy favorites + pack', desc:'Revisit a favorite, last bagels/smoked meat, light day.', cost:'—', tag:'down', q:'things to do Montreal'},
+      {id:'oldport2', name:'Old Port / La Ronde', desc:'Squeeze in anything missed — Old Port or the amusement park.', cost:'varies', tag:'rec', q:'Old Port Montreal La Ronde'},
+    ]},
+    {id:'d10n', label:'Last Montréal night', opts:[
+      {id:'lucy', name:'Lucy Darling: Simply Darling', desc:'Glam, witty variety show, 5pm & 8pm, L\u2019Olympia.', cost:'see site', jfl:true, q:'Lucy Darling Simply Darling Just for Laughs'},
+      {id:'farewell', name:'Farewell dinner (from the shortlist)', desc:'Send off Montréal with a great meal.', cost:'—', q:'best restaurants Montreal'},
+      {id:'rest2', name:'Pack + early night', desc:'Drive to Québec City tomorrow — rest up.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal'},
+    ]}
+  ], note:'Check-out is tomorrow by noon — pack tonight.'},
+  {id:'d11', date:'Mon Jul 27', title:'Drive to Québec City', group:'all', travel:true, headerBefore:'Montréal → Québec City',
+    timeline:['By 12:00pm — check out of the Sheraton','Pick up the rental downtown (Vanessa & Erik drive)','~1.5 hrs in — Trois-Rivières for lunch / leg-stretch','Continue along the St. Lawrence','By 4:00pm — check into Hôtel PUR, Québec City'],
+    slots:[
+      {id:'d11r', label:'How we drive it', opts:[
+        {id:'scenic', name:'Scenic Chemin du Roy (Route 138)', desc:'River views + a Trois-Rivières lunch stop. ~5 hrs with stops.', cost:'rental + gas', tag:'rec', q:'Chemin du Roy Route 138 scenic drive'},
+        {id:'direct', name:'Direct (Hwy 40) + Montmorency Falls', desc:'Faster ~3 hrs; grab Montmorency Falls on the way into the city.', cost:'rental + gas', q:'Montmorency Falls Quebec City'},
+      ]}
+    ], note:'Travel day — allow the whole afternoon. Keep the rental a couple of days for the eastern day-trip (Montmorency, Île d\u2019Orléans, Canyon Sainte-Anne).'},
+  {id:'eatqc', eat:true, group:'all', headerBefore:'In Québec City', title:'Where to eat — Québec City', intro:'QC\u2019s food scene is intimate and a touch cheaper than Montréal\u2019s — but the best tables book up fast in summer. Tap every spot you\u2019d go to. 📱 TikTok and 🔎 links on each.', restaurants:QC_RESTAURANTS},
+  {id:'d12', date:'Tue Jul 28', title:'First day in Québec City', group:'all', slots:[
+    {id:'d12d', label:'Daytime', opts:[
+      {id:'oldqc', name:'Old Québec on foot', desc:'Château Frontenac, Terrasse Dufferin, Petit-Champlain, Place-Royale, the ramparts.', cost:'Free', q:'Old Quebec walking Chateau Frontenac Petit-Champlain'},
+      {id:'foodtour', name:'Guided food tour', desc:'~3 hrs, several tastings through Old Québec with a local guide.', cost:'~$130 CAD/person', tag:'rec', q:'Quebec City food tour Old Quebec'},
+      {id:'civ', name:'Musée de la civilisation', desc:'Excellent modern museum in Lower Town — good rainy-day pick.', cost:'~$22 CAD', q:'Musee de la civilisation Quebec City'},
+    ]},
+    {id:'d12n', label:'Tonight', opts:[
+      {id:'qcdin', name:'Dinner in Old Québec (from the shortlist)', desc:'Then a Petit-Champlain evening stroll.', cost:'—', q:'best restaurants Old Quebec'},
+      {id:'srdin', name:'Dinner in Saint-Roch', desc:'Explore your own neighborhood — Ouroboros, Légende & more, steps from PUR.', cost:'—', tag:'down', q:'Saint-Roch Quebec City restaurants'},
+    ]}
+  ], note:'Settle in — PUR is in Saint-Roch, ~15–20 min walk (or a short ride) up to Old Québec.'},
+  {id:'d13', date:'Wed Jul 29', title:'Eastern day-trip (car day)', group:'all', slots:[
+    {id:'d13d', label:'Pick the shape of the day', opts:[
+      {id:'loop', name:'Full loop: Montmorency + Île d\u2019Orléans + Canyon Sainte-Anne', desc:'Big waterfall, then island farms/cider, then suspension bridges over a 74m canyon. Active, full day.', cost:'canyon ~$45 CAD/pp', tag:'rec', q:'Montmorency Falls Ile d\u2019Orleans Canyon Sainte-Anne'},
+      {id:'relaxed', name:'Relaxed: Montmorency + Île d\u2019Orléans', desc:'The falls (cable car / suspension bridge), then wine, cider, chocolate & strawberry farms.', cost:'falls ~$10 park', tag:'rec', q:'Montmorency Falls Ile d\u2019Orleans'},
+      {id:'valcartier', name:'Valcartier waterpark', desc:'Big outdoor waterpark ~20 min away — fun on a hot day.', cost:'~$55 CAD', tag:'rec', q:'Village Vacances Valcartier waterpark'},
+    ]}
+  ], note:'This is the day the rental earns its keep. Easy, casual dinner afterwards.'},
+  {id:'d14', date:'Thu Jul 30', title:'Last full day — all four', group:'all', pin:'Erik\u2019s last evening with us', slots:[
+    {id:'d14d', label:'Daytime', opts:[
+      {id:'strom', name:'Strom Spa Nordic', desc:'Riverside Nordic thermal spa — pure relaxation. Book ahead, summer fills up.', cost:'~$70–105 CAD', tag:'down', q:'Strom Spa Vieux-Quebec'},
+      {id:'shop', name:'Petit-Champlain + Rue du Trésor', desc:'Boutique shopping, the artists\u2019 alley, Terrasse Dufferin. Easy pace.', cost:'pay as you go', tag:'down', q:'Petit-Champlain Rue du Tresor Quebec City'},
+      {id:'plains', name:'Plains of Abraham + Citadelle', desc:'Huge clifftop park with river views; changing of the guard at the Citadelle.', cost:'Citadelle ~$18', tag:'rec', q:'Plains of Abraham Citadelle Quebec City'},
+    ]},
+    {id:'d14n', label:'Farewell dinner (Erik flies out before dawn)', opts:[
+      {id:'flambe', name:'Le Continental — tableside flambé', desc:'A memorable send-off; classic old-Québec theatre.', cost:'$$$', q:'Le Continental Quebec City'},
+      {id:'anciens2', name:'Aux Anciens Canadiens', desc:'Traditional Québécois in the 1676 house — very QC.', cost:'$$$', site:'https://auxancienscanadiens.qc.ca/', q:'Aux Anciens Canadiens Quebec City'},
+      {id:'pick', name:'Whatever won the QC shortlist', desc:'Go with the family favorite from above.', cost:'—', q:'best restaurants Quebec City'},
+    ]}
+  ], note:'Return the rental this morning if the day-trips are done — you won\u2019t need it after today. Make tonight the group celebration; Erik\u2019s car leaves very early tomorrow.'},
+  {id:'d15', date:'Fri Jul 31', title:'The three of us', group:'all', pin:'Erik departs YQB 5:00am', slots:[
+    {id:'d15d', label:'Daytime (Vanessa, Savannah & Sierra)', opts:[
+      {id:'easyqc', name:'Easy Old Québec + last shopping', desc:'Petit-Champlain, cafés, Terrasse Dufferin — gentle pace.', cost:'—', tag:'down', q:'things to do Old Quebec'},
+      {id:'spa2', name:'Spa / pamper day', desc:'Strom Spa (if not done) or a treatment — treat yourselves.', cost:'varies', tag:'down', q:'Strom Spa Vieux-Quebec'},
+      {id:'orleans2', name:'Île d\u2019Orléans by guided tour', desc:'If you skipped it and dropped the car — a guided island tour.', cost:'varies', tag:'rec', q:'Ile d\u2019Orleans tour from Quebec City'},
+    ]},
+    {id:'d15n', label:'Last night', opts:[
+      {id:'lastdin', name:'Final dinner (from the shortlist)', desc:'One more great QC meal.', cost:'—', q:'best restaurants Quebec City'},
+      {id:'packqc', name:'Light night + pack', desc:'Early-ish night before the travel day.', cost:'—', tag:'down', q:'Hotel PUR Quebec'},
+    ]}
+  ], note:'Erik\u2019s gone by sunrise (he clears U.S. preclearance in Toronto). Just the three of you today.'},
+  {id:'d16', date:'Sat Aug 1', title:'Heading home', group:'all', travel:true, headerBefore:'Heading home',
+    timeline:['By 12:00pm — check out of Hôtel PUR','Last stroll / lunch in Old Québec','~2:00pm — head to YQB (~15 min)','4:12pm — YQB → Philadelphia','~1h21m connection in PHL — first U.S. entry (Global Entry helps)','7:35pm — PHL → Orlando','10:43pm — land MCO'],
+    note:'Tight PHL connection — Global Entry/Mobile Passport speeds the customs step. Bags: only Vanessa has free checked bags, so pool luggage; if you need one more, add it as a FIRST bag on a girl\u2019s economy ticket (~$38) rather than a 3rd bag on a business fare.'},
+];
+
+let me_voter = null;
+let votes = {}; // { voter: { slotId: optId | [optId,...] } }
+
+const $ = s => document.querySelector(s);
+const toast = (m)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1900);};
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+
+// ---------- storage abstraction (Firebase → Claude → device) ----------
+const Store = {
+  mode:'local',
+  async init(onChange){
+    this.onChange = onChange;
+    if(FIREBASE_CONFIG){
+      try{
+        await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+        await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js');
+        firebase.initializeApp(FIREBASE_CONFIG);
+        this.db = firebase.database();
+        this.mode = 'firebase';
+        this.db.ref('trip/votes').on('value', s => onChange(s.val() || {}));
+        return;
+      }catch(e){ console.warn('Firebase init failed, falling back.', e); }
+    }
+    if(window.storage){ this.mode='claude'; onChange(await this.readClaude()); return; }
+    this.mode='local'; onChange(this.readLocal());
+  },
+  async readClaude(){ const out={}; for(const v of VOTERS){ try{ const r=await window.storage.get('votes:'+v.name,true); out[v.name]=(r&&r.value)?JSON.parse(r.value):{}; }catch(_){ out[v.name]={}; } } return out; },
+  readLocal(){ try{ return JSON.parse(localStorage.getItem('trip:votes')||'{}'); }catch(_){ return {}; } },
+  async setVoter(name,obj){
+    if(this.mode==='firebase'){ try{ await this.db.ref('trip/votes/'+name).set(obj); }catch(e){ toast('Save failed'); } }
+    else if(this.mode==='claude'){ try{ await window.storage.set('votes:'+name, JSON.stringify(obj), true); }catch(e){ toast('Save failed'); } }
+    else { try{ const all=this.readLocal(); all[name]=obj; localStorage.setItem('trip:votes', JSON.stringify(all)); }catch(e){ toast('Save failed'); } }
+  },
+  async refresh(){
+    if(this.mode==='claude') this.onChange(await this.readClaude());
+    else if(this.mode==='local') this.onChange(this.readLocal());
+  }
+};
+
+// bulbs + people
+$('#bulbs').innerHTML = Array.from({length:13}).map(()=>'<span class="bulb"></span>').join('');
+$('#people').innerHTML = VOTERS.map(v=>`<button class="person" data-n="${v.name}"><span class="ini" style="background:${v.color}">${ini(v.name)}</span>${v.name}</button>`).join('');
+$('#people').addEventListener('click', e=>{ const b=e.target.closest('.person'); if(!b) return; me_voter=b.dataset.n; try{localStorage.setItem('trip:me',me_voter);}catch(_){ } render(); });
+$('#refresh').addEventListener('click', async ()=>{ await Store.refresh(); toast('Votes refreshed'); });
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) Store.refresh(); });
+
+function valFor(voter, slotId){ return (votes[voter]||{})[slotId]; }
+function tallyFor(slotId, optId){
+  return VOTERS.filter(v=>{ const x=valFor(v.name,slotId); return Array.isArray(x)?x.includes(optId):x===optId; }).map(v=>v.name);
+}
+function leaderFor(slot){
+  const counts = slot.opts.map(o=>({id:o.id,n:tallyFor(slot.id,o.id).length}));
+  const max=Math.max(...counts.map(c=>c.n));
+  if(max===0) return null;
+  const top=counts.filter(c=>c.n===max);
+  return top.length===1?top[0].id:null;
+}
+function castVote(slotId, optId, multi){
+  if(!me_voter){ toast('Pick your name first'); return; }
+  votes[me_voter]=votes[me_voter]||{};
+  if(multi){
+    let arr = Array.isArray(votes[me_voter][slotId])?votes[me_voter][slotId].slice():[];
+    arr = arr.includes(optId) ? arr.filter(x=>x!==optId) : arr.concat(optId);
+    if(arr.length) votes[me_voter][slotId]=arr; else delete votes[me_voter][slotId];
+  } else {
+    if(votes[me_voter][slotId]===optId) delete votes[me_voter][slotId];
+    else votes[me_voter][slotId]=optId;
+  }
+  Store.setVoter(me_voter, votes[me_voter]);
+  render();
+}
+window.castVote = castVote;
+
+let openSections = { hotels:false, flights:false, eatmtl:true, fun:false, eatqc:false };
+function toggleSection(k){ openSections[k]=!openSections[k]; render(); }
+window.toggleSection = toggleSection;
+function panel(key, title, tagText, bodyHTML){
+  const open = !!openSections[key];
+  return `<div class="panel${open?' open':''}">
+    <button class="panel-head" onclick="toggleSection('${key}')">
+      <span class="chev">${open?'▾':'▸'}</span>
+      <span class="panel-title">${title}</span>
+      <span class="panel-tag">${tagText}</span>
+    </button>${open?`<div class="panel-body">${bodyHTML}</div>`:''}</div>`;
+}
+
+function optHTML(slot, o){
+  const who = tallyFor(slot.id,o.id);
+  const x = valFor(me_voter, slot.id);
+  const mine = me_voter && (Array.isArray(x)?x.includes(o.id):x===o.id);
+  const clickable = !!me_voter;
+  const leader = leaderFor(slot)===o.id;
+  const badge = o.tag==='down' ? '<span class="badge down">Downtime</span>' : (o.tag==='rec' ? '<span class="badge rec">Recreation</span>' : '');
+  return `<div class="opt${mine?' mine':''}${clickable?'':' disabled'}" ${clickable?`onclick="castVote('${slot.id}','${o.id}',${slot.multi?'true':'false'})"`:''}>
+    <div class="opt-head">
+      <div class="check${slot.multi?' sq':''}">${mine?'✓':''}</div>
+      <div style="flex:1">
+        <div class="opt-name">${o.name}</div>
+        <div class="opt-desc">${o.desc}</div>
+        <div class="opt-meta">
+          <span class="cost">${o.cost}</span>
+          ${badge}
+          ${o.site
+              ? `<a class="lk j" href="${o.site}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${o.jfl?'Tickets':'Website'}</a>`
+              : (o.jfl
+                  ? `<a class="lk j" href="${JFL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">◆ Tickets</a>`
+                  : `<a class="lk g" href="${g(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔎 Look it up</a>`)}
+          ${o.vid
+              ? `<a class="lk t" href="${o.vid}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Video</a>`
+              : `<a class="lk t" href="${tk(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱 TikTok</a>`}
+          ${leader?'<span class="lead">★ Leading</span>':''}
+          <span class="voters">${who.map(n=>`<span class="vini" style="background:${colorOf(n)}" title="${n}">${ini(n)}</span>`).join('')}${who.length?`<span class="vcount">${who.length}</span>`:''}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const y=window.scrollY;
+  document.querySelectorAll('.person').forEach(p=>p.classList.toggle('active', p.dataset.n===me_voter));
+  $('#modepill').textContent = Store.mode==='firebase' ? '◆ shared live' : (Store.mode==='claude' ? '◆ shared in Claude' : '◆ this device only');
+  $('#banner').innerHTML = (Store.mode==='local')
+    ? '<div class="banner">Saving on this device only. Add a free Firebase config (see the note at the top of the file) to share votes across the family.</div>' : '';
+
+  let html='';
+  if(!me_voter) html += `<div class="pickfirst">↑ Pick your name to start voting (you can still browse below)</div>`;
+
+  // --- Hotels (collapsible) ---
+  let hotelsHTML='';
+  HOTELS.forEach(h=>{
+    hotelsHTML += `<div class="ticket"><div class="stub-top"><span class="date">${h.dates}</span><span class="dtitle">${h.name}</span><span class="badge booked" style="margin-left:auto">Booked</span></div><div class="perf"></div>
+      <div class="hbody"><div class="hroom">${h.room}</div><div class="opt-desc">${h.note}</div>
+      <div class="opt-meta"><a class="lk g" href="${g(h.q)}" target="_blank" rel="noopener">🔎 Look it up</a></div></div></div>`;
+  });
+  html += panel('hotels','Where we\u2019re staying','Booked', hotelsHTML);
+
+  // --- Flights (collapsible) ---
+  let flightsHTML='';
+  FLIGHTS.forEach(f=>{
+    flightsHTML += `<div class="ticket"><div class="stub-top"><span class="date">${f.date}</span><span class="dtitle">${f.dir}</span><span class="badge booked" style="margin-left:auto">✈ Booked</span></div><div class="perf"></div>
+      <div class="hbody">${f.legs.map(l=>`<div class="hroom" style="font-size:13px">${l}</div>`).join('')}<div class="opt-desc">${f.note}</div></div></div>`;
+  });
+  html += panel('flights','Flights','Booked', flightsHTML);
+
+  // --- Where to eat — Montréal (collapsible) ---
+  const eatSlot = {id:'eat', multi:true, opts:RESTAURANTS};
+  let mtlEat = `<div class="ticket"><div class="intro" style="padding-top:14px">Tap every spot you\u2019d be happy with — the winners get aimed at the open dinner nights. 📱 TikTok and 🔎 links on each.</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+  RESTAURANTS.forEach(o=> mtlEat += optHTML(eatSlot,o));
+  mtlEat += `</div></div>`;
+  html += panel('eatmtl','Where to eat — Montréal','Pick all', mtlEat);
+
+  // --- Fun & out-of-the-ordinary (collapsible) ---
+  const funSlot = {id:'fun', multi:true, opts:FUN};
+  let funHTML = `<div class="ticket"><div class="intro" style="padding-top:14px">Out-of-the-ordinary picks to work into any day — tap whatever sounds fun. (MTL = Montréal, QC = Québec City.)</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+  FUN.forEach(o=> funHTML += optHTML(funSlot,o));
+  funHTML += `</div></div>`;
+  html += panel('fun','Fun & out-of-the-ordinary','Pick all', funHTML);
+
+  // --- Days ---
+  let openedAll=false;
+  DAYS.forEach(day=>{
+    if(day.headerBefore){ html += `<div class="sec"><h2>${day.headerBefore}</h2><div class="ln"></div><span class="tag">Jul 27+</span></div>`; openedAll=true; }
+    else if(day.group==='all' && !openedAll){ html += `<div class="sec"><h2>Everyone together</h2><div class="ln"></div><span class="tag">From Jul 23</span></div>`; openedAll=true; }
+    else if(day.id==='d1'){ html += `<div class="sec"><h2>The three of us</h2><div class="ln"></div><span class="tag">Jul 17–22</span></div>`; }
+    if(day.eat){
+      const eatSlot={id:day.id, multi:true, opts:day.restaurants};
+      let qcEat = `<div class="ticket"><div class="intro" style="padding-top:14px">${day.intro}</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+      day.restaurants.forEach(o=> qcEat += optHTML(eatSlot,o));
+      qcEat += `</div></div>`;
+      html += panel('eatqc', day.title, 'Pick all', qcEat);
+      return;
+    }
+    const savLocked = (me_voter==='Savannah' && day.group==='trio');
+    html += `<div class="ticket${savLocked?' locked':''}${day.travel?' travelcard':''}">`;
+    html += `<div class="stub-top"><span class="date">${day.date}</span><span class="dtitle">${day.title}</span><span class="grp">${day.travel?'🚗 Drive':(day.group==='trio'?'V · E · Sierra':'All four')}</span></div><div class="perf"></div>`;
+    if(day.pin) html += `<div class="pin">${day.pin}</div>`;
+    if(day.locked) html += `<div class="locktag">${day.locked}</div>`;
+    if(day.travel && day.timeline){ html += `<div class="intro">Travel day — the shape of it:</div><ul class="timeline">${day.timeline.map(t=>`<li>${t}</li>`).join('')}</ul>`; }
+    if(savLocked){ html += `<div class="note">Before you land — Vanessa, Erik & Sierra are choosing this one.</div>`; }
+    else if(day.slots){ day.slots.forEach(slot=>{ slot.multi=true; html += `<div class="slot"><div class="slot-lbl">${slot.label}</div>`; slot.opts.forEach(o=> html += optHTML(slot,o)); html += `</div>`; }); }
+    if(day.note) html += `<div class="note">${day.note}</div>`;
+    html += `</div>`;
+  });
+
+  $('#board').innerHTML = html;
+  window.scrollTo(0,y);
+}
+
+(async function init(){
+  try{ const m=localStorage.getItem('trip:me'); if(m) me_voter=m; }catch(_){}
+  await Store.init(data=>{ votes = data||{}; render(); });
+  render();
+})();
+</script>
+</body>
+</html>
