@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adams Family · JFL Montréal — Vote</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMyQTFBM0UiLz48cmVjdCB4PSIyNiIgeT0iMTEiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNSIgcng9IjYiIGZpbGw9IiNGNUU5RDYiLz48cGF0aCBkPSJNMTkgMzBhMTMgMTMgMCAwIDAgMjYgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjVFOUQ2IiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHJlY3QgeD0iMzAuNCIgeT0iNDMiIHdpZHRoPSIzLjIiIGhlaWdodD0iOCIgcng9IjEuMiIgZmlsbD0iI0Y1RTlENiIvPjxyZWN0IHg9IjIzIiB5PSI1MSIgd2lkdGg9IjE4IiBoZWlnaHQ9IjMuNCIgcng9IjEuNyIgZmlsbD0iI0Y1RTlENiIvPjxjaXJjbGUgY3g9IjQ4LjUiIGN5PSIxNS41IiByPSIzLjQiIGZpbGw9IiNGRjZCNUMiLz48Y2lyY2xlIGN4PSIxNCIgY3k9IjIwIiByPSIyLjIiIGZpbGw9IiNGRkMyNEIiLz48L3N2Zz4K">
 <!--
   ============================================================================
   SHARED VOTING SETUP (optional, for your GitHub-hosted site)
@@ -160,9 +161,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ====== paste your Firebase config object here to turn on shared voting ======
-const FIREBASE_CONFIG = null;
-// e.g. { apiKey:"…", authDomain:"…", databaseURL:"https://yourproj-default-rtdb.firebaseio.com", projectId:"…", appId:"…" };
+// ====== Firebase config — shared live voting is ON ======
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB1nYCcTnQ4vthV-aY2uaYhyzX60ZsgeI4",
+  authDomain: "adamsfamily2026quebectrip.firebaseapp.com",
+  databaseURL: "https://adamsfamily2026quebectrip-default-rtdb.firebaseio.com",
+  projectId: "adamsfamily2026quebectrip",
+  storageBucket: "adamsfamily2026quebectrip.firebasestorage.app",
+  messagingSenderId: "882730498559",
+  appId: "1:882730498559:web:dab84bda616afef4fb8fca"
+};
 
 const VOTERS = [
   {name:'Vanessa', color:'#FF6B5C'},
@@ -184,22 +192,22 @@ const JFL = 'https://montreal.hahaha.com/en';
 // When present, these replace the default search links (shown as "🔗 Website" / "▶ Video").
 // Leave them off and the item falls back to a quick search link instead.
 const RESTAURANTS = [
-  {id:'timeout', name:'Time Out Market', desc:'Downtown (Centre Eaton) · food hall, a dozen great kitchens under one roof — easy when everyone wants something different.', cost:'$$', q:'Time Out Market Montreal'},
-  {id:'jatoba',  name:'Jatoba', desc:'Downtown · sleek Asian-inspired, consistently outstanding — good for a special night.', cost:'$$$', q:'Jatoba restaurant Montreal'},
-  {id:'celeste', name:'Celeste', desc:'Downtown (Maison Alcan) · buzzy 2026 Italian, striking room, house-made pasta.', cost:'$$$', q:'Celeste restaurant Maison Alcan Montreal'},
+  {id:'timeout', name:'Time Out Market', desc:'Downtown (Centre Eaton) · food hall, a dozen great kitchens under one roof — easy when everyone wants something different.', cost:'$$', site:'https://www.timeout.com/time-out-market-montreal', q:'Time Out Market Montreal'},
+  {id:'jatoba',  name:'Jatoba', desc:'Downtown · sleek Japanese-inspired, consistently outstanding — good for a special night.', cost:'$$$', site:'https://www.jatobamontreal.com/', q:'Jatoba restaurant Montreal'},
+  {id:'celeste', name:'Celeste', desc:'Downtown (Maison Alcan) · buzzy 2025 Italian-Mediterranean, striking room, house-made pasta.', cost:'$$$', site:'https://celestemontreal.com/', q:'Celeste restaurant Maison Alcan Montreal'},
   {id:'apdc',    name:'Au Pied de Cochon', desc:'Plateau · decadent, festive Québécois — the legendary blow-out dinner.', cost:'$$$', site:'https://www.aupieddecochon.ca/', q:'Au Pied de Cochon Montreal'},
   {id:'lexpress',name:"L'Express", desc:'Plateau · the classic Parisian-style bistro, a Montréal institution.', cost:'$$', q:"L'Express bistro Montreal"},
-  {id:'violon',  name:'Le Violon', desc:'Plateau · fancy-but-not-stuffy, warm service, much-loved newcomer.', cost:'$$$', q:'Le Violon restaurant Montreal'},
+  {id:'violon',  name:'Le Violon', desc:'Plateau · fancy-but-not-stuffy, warm service, much-loved newcomer (Canada\u2019s 100 Best).', cost:'$$$', site:'https://le-violon.ca/', q:'Le Violon restaurant Montreal'},
   {id:'schwartz',name:"Schwartz's Deli", desc:'The Main · legendary smoked-meat sandwich since 1928. A lunch rite of passage.', cost:'$', site:'https://schwartzsdeli.com/', q:"Schwartz's Deli Montreal smoked meat"},
-  {id:'banquise',name:'La Banquise', desc:'Plateau · iconic poutine, 30+ versions, open late. Fun and casual.', cost:'$', q:'La Banquise poutine Montreal'},
+  {id:'banquise',name:'La Banquise', desc:'Plateau · iconic poutine, 30+ versions, open 24h. Fun and casual.', cost:'$', site:'https://labanquise.com/en/', q:'La Banquise poutine Montreal'},
   {id:'beautys', name:'Beautys', desc:'Plateau · classic Jewish diner brunch since 1942 — the Mish-Mash omelette.', cost:'$', q:'Beautys Montreal brunch'},
 ];
 
 // ---------- Québec City restaurant shortlist (multi-select) ----------
 const QC_RESTAURANTS = [
   {id:'anciens', name:'Aux Anciens Canadiens', desc:'Old Québec · traditional Québécois in a 1676 house, the oldest in the city. Tourtière, game, maple.', cost:'$$$', site:'https://auxancienscanadiens.qc.ca/', q:'Aux Anciens Canadiens Quebec City'},
-  {id:'lapin', name:'Le Lapin Sauté', desc:'Petit-Champlain · cozy rabbit & Québécois comfort food, lovely summer terrace.', cost:'$$', q:'Le Lapin Saute Quebec City'},
-  {id:'continental', name:'Le Continental', desc:'Old Québec · tableside flambé, old-school chic — a classic since 1956.', cost:'$$$', q:'Le Continental restaurant Quebec City'},
+  {id:'lapin', name:'Le Lapin Sauté', desc:'Petit-Champlain · cozy rabbit & Québécois comfort food, lovely summer terrace.', cost:'$$', site:'https://www.lapinsaute.com/', q:'Le Lapin Saute Quebec City'},
+  {id:'continental', name:'Le Continental', desc:'Old Québec · tableside flambé, old-school chic — a classic since 1956.', cost:'$$$', site:'https://restaurantlecontinental.com/en/', q:'Le Continental restaurant Quebec City'},
   {id:'boulay', name:'Chez Boulay', desc:'Old Québec · boreal cuisine, modern Québécois built on northern terroir.', cost:'$$$', q:'Chez Boulay bistro boreal Quebec City'},
   {id:'sagamite', name:'Sagamité', desc:'Old Québec · Indigenous & game (bison, elk, venison), dramatic flaming dishes.', cost:'$$', q:'Sagamite restaurant Quebec City'},
   {id:'ouroboros', name:'Ouroboros', desc:'Saint-Roch (near PUR) · creative market cooking, Michelin Bib Gourmand.', cost:'$$$', q:'Ouroboros restaurant Quebec City Saint-Roch'},
@@ -207,11 +215,42 @@ const QC_RESTAURANTS = [
   {id:'cochon', name:'Cochon Dingue', desc:'Casual French-Canadian brasserie — family-friendly, generous portions.', cost:'$$', q:'Cochon Dingue Quebec City'},
 ];
 
+// ---------- Must-try regional foods (multi-select checklist) ----------
+const FOODS = [
+  {id:'poutine', name:'Poutine', desc:'Québec\u2019s holy trinity: fries, fresh cheese curds, hot gravy. Get the classic, then a loaded one. Best in show: La Banquise (MTL, 24h) and Chez Ashton (QC).', cost:'must-try', q:'best poutine Montreal Quebec City'},
+  {id:'smoked', name:'Montréal smoked meat', desc:'Hand-cut brisket cured 10+ days, piled on rye with yellow mustard. The pilgrimage is Schwartz\u2019s on The Main.', cost:'must-try', q:'Montreal smoked meat Schwartz best'},
+  {id:'bagel', name:'Montréal bagel', desc:'Thinner, sweeter, denser than NYC — hand-rolled, honey-boiled, wood-fired. The eternal rivalry: St-Viateur vs Fairmount (both Mile End, both worth it).', cost:'must-try', site:'https://fairmountbagel.com/', q:'Montreal bagel St-Viateur Fairmount'},
+  {id:'tourtiere', name:'Tourtière', desc:'Spiced meat pie, the classic Québécois comfort dish. Best at Aux Anciens Canadiens in the 1676 house in Old Québec.', cost:'must-try', q:'tourtiere Quebec meat pie'},
+  {id:'maple', name:'Maple everything (tire d\u2019érable)', desc:'Maple taffy rolled on snow, maple butter, maple pie. Look for it at markets and sugar shacks — and on dessert menus citywide.', cost:'must-try', q:'maple taffy tire erable Quebec'},
+  {id:'chomeur', name:'Pouding chômeur', desc:'\u201CUnemployed-person\u2019s pudding\u201D — warm cake drowned in hot maple/brown-sugar syrup. Pure Québécois nostalgia.', cost:'must-try', q:'pouding chomeur Quebec dessert'},
+  {id:'sucre', name:'Tarte au sucre (sugar pie)', desc:'Brown-sugar/maple custard pie. Rich, old-fashioned, unmissable.', cost:'must-try', q:'tarte au sucre sugar pie Quebec'},
+  {id:'cretons', name:'Cretons', desc:'Seasoned pork-and-onion spread you slather on toast at a proper Québécois brunch.', cost:'must-try', q:'cretons Quebec breakfast spread'},
+  {id:'curds', name:'Fromage en grains (squeaky curds)', desc:'Fresh cheese curds eaten by the bag — they should squeak. Pick some up at a market or fromagerie.', cost:'must-try', q:'fromage en grains cheese curds Quebec'},
+];
+
+// ---------- Don't-miss: sights, history & ghost stories (multi-select) ----------
+const DONTMISS = [
+  // Montréal
+  {id:'notredame', name:'Notre-Dame Basilica (MTL)', desc:'Old Montréal · jaw-dropping cobalt-and-gold interior. Visit by day, or catch the AURA light-and-sound show at night.', cost:'MTL · sight', q:'Notre-Dame Basilica Montreal AURA tickets'},
+  {id:'oldmtl', name:'Old Montréal & Old Port (MTL)', desc:'Cobblestone streets, the waterfront, street performers, terraces. Best wandered at golden hour.', cost:'MTL · sight', q:'Old Montreal Old Port what to do'},
+  {id:'mtroyal', name:'Mount Royal lookout (MTL)', desc:'The Kondiaronk Belvédère gives the postcard skyline view; the Olmsted-designed park behind it is gorgeous for a stroll.', cost:'MTL · sight', q:'Mount Royal Kondiaronk Belvedere lookout'},
+  {id:'pointe', name:'Pointe-à-Callière (MTL)', desc:'Archaeology museum built over the exact spot Montréal was founded in 1642 — you walk through the real ruins underground.', cost:'MTL · sight', q:'Pointe-a-Calliere museum Montreal'},
+  {id:'griffintown', name:'Haunted Griffintown Ghost Walk (MTL)', desc:'Montréal\u2019s most infamous ghost: \u201CHeadless Mary\u201D Gallagher, murdered 1879, said to return every 7 years — and 2026 is a return year. Lantern-lit storytelling walk through the old Irish quarter.', cost:'MTL · 👻 ghost', site:'https://hauntedmontreal.com/', q:'Haunted Griffintown Ghost Walk Mary Gallagher'},
+  // Québec City
+  {id:'frontenac', name:'Château Frontenac & Dufferin Terrace (QC)', desc:'The most-photographed hotel on earth, perched over the river. Walk the Dufferin Terrace boardwalk beneath it — and ask about its own ghost legends.', cost:'QC · sight', q:'Chateau Frontenac Dufferin Terrace Quebec'},
+  {id:'petitchamplain', name:'Petit-Champlain & Place Royale (QC)', desc:'The oldest commercial district in North America and the very square where Québec was founded in 1608. Storybook lanes, shops, murals.', cost:'QC · sight', q:'Quartier Petit-Champlain Place Royale Quebec'},
+  {id:'citadelle', name:'La Citadelle de Québec (QC)', desc:'Star-shaped active fortress, home of the Royal 22e Régiment. Summer brings the Changing of the Guard; daytime guided tours run all season.', cost:'QC · sight', site:'https://www.lacitadelle.qc.ca/en/', q:'La Citadelle de Quebec tours changing of the guard'},
+  {id:'plains', name:'Plains of Abraham (QC)', desc:'Where the 1759 battle decided New France\u2019s fate — now a huge clifftop park for walking, picnicking and river views.', cost:'QC · sight', q:'Plains of Abraham Battlefields Park Quebec'},
+  {id:'ramparts', name:'The old city walls & gates (QC)', desc:'Québec is the only fortified city north of Mexico (UNESCO). Walk the ramparts and through Porte Saint-Louis / Porte Saint-Jean.', cost:'QC · sight', q:'Old Quebec city walls ramparts Porte Saint-Louis'},
+  {id:'ghostqc', name:'Ghost Tours of Québec (QC)', desc:'Costumed guide, lantern in hand, leads a 90-min walk through Old Québec\u2019s 400 years of murders, hauntings and legends. Great for the whole family.', cost:'QC · 👻 ghost', site:'https://ghosttoursofquebec.com/', q:'Ghost Tours of Quebec lantern walk'},
+];
+
+
 // ---------- Confirmed hotels (reference, not votable) ----------
 // Confirmation numbers are intentionally NOT stored here — this file is public.
 const HOTELS = [
   {name:'Le Centre Sheraton Montréal', dates:'Jul 17 – 27 · 10 nights', room:'Deluxe — 1 King + sofa bed, high floor', note:'M Club lounge (37th floor): Platinum breakfast + evening apps. Walking distance to every festival venue.', q:'Le Centre Sheraton Montreal'},
-  {name:'Hôtel PUR Québec (Tribute)', dates:'Jul 27 – Aug 1 · 5 nights', room:'King Guest Room (cash)', note:'Saint-Roch district. Platinum breakfast, no lounge. ~15–20 min uphill walk to Old Québec.', q:'Hotel PUR Quebec Tribute Portfolio'},
+  {name:'Hôtel PUR Québec (Tribute)', dates:'Jul 27 – Aug 1 · 5 nights', room:'King Guest Room (cash)', note:'Trendy Saint-Roch district — great restaurants at the door. Platinum breakfast, no lounge. Old Québec is a ~5-min rideshare or 15-min uphill walk.', q:'Hotel PUR Quebec Tribute Portfolio'},
   {name:'Hôtel PUR Québec (Tribute)', dates:'Jul 27 – Aug 1 · 5 nights', room:'2 Queen Guest Room (points)', note:'Second room on points — book-4-get-5th-free. The girls\u2019 room.', q:'Hotel PUR Quebec Tribute Portfolio'},
 ];
 
@@ -462,7 +501,7 @@ function castVote(slotId, optId, multi){
 }
 window.castVote = castVote;
 
-let openSections = { hotels:false, flights:false, eatmtl:true, fun:false, eatqc:false };
+let openSections = { hotels:false, flights:false, eatmtl:true, foods:false, dontmiss:false, fun:false, eatqc:false };
 function toggleSection(k){ openSections[k]=!openSections[k]; render(); }
 window.toggleSection = toggleSection;
 function panel(key, title, tagText, bodyHTML){
@@ -495,7 +534,10 @@ function optHTML(slot, o){
               ? `<a class="lk j" href="${o.site}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 ${o.jfl?'Tickets':'Website'}</a>`
               : (o.jfl
                   ? `<a class="lk j" href="${JFL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">◆ Tickets</a>`
-                  : `<a class="lk g" href="${g(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔎 Look it up</a>`)}
+                  : '')}
+          ${!o.jfl
+              ? `<a class="lk g" href="${g(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔎 Look it up</a>`
+              : ''}
           ${o.vid
               ? `<a class="lk t" href="${o.vid}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Video</a>`
               : `<a class="lk t" href="${tk(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱 TikTok</a>`}
@@ -541,12 +583,26 @@ function render(){
   mtlEat += `</div></div>`;
   html += panel('eatmtl','Where to eat — Montréal','Pick all', mtlEat);
 
+  // --- Must-try regional foods (collapsible, votable) ---
+  const foodSlot = {id:'food', multi:true, opts:FOODS};
+  let foodHTML = `<div class="ticket"><div class="intro" style="padding-top:14px">The dishes you shouldn\u2019t leave Québec without. Tap the ones you don\u2019t want to miss — we\u2019ll make sure they land somewhere on the trip.</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+  FOODS.forEach(o=> foodHTML += optHTML(foodSlot,o));
+  foodHTML += `</div></div>`;
+  html += panel('foods','Must-try foods of the region','Pick all', foodHTML);
+
   // --- Fun & out-of-the-ordinary (collapsible) ---
   const funSlot = {id:'fun', multi:true, opts:FUN};
   let funHTML = `<div class="ticket"><div class="intro" style="padding-top:14px">Out-of-the-ordinary picks to work into any day — tap whatever sounds fun. (MTL = Montréal, QC = Québec City.)</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
   FUN.forEach(o=> funHTML += optHTML(funSlot,o));
   funHTML += `</div></div>`;
   html += panel('fun','Fun & out-of-the-ordinary','Pick all', funHTML);
+
+  // --- Don't miss: sights, history & ghost stories (collapsible, votable) ---
+  const dmSlot = {id:'dontmiss', multi:true, opts:DONTMISS};
+  let dmHTML = `<div class="ticket"><div class="intro" style="padding-top:14px">Not just shows — the landmarks, history and a couple of genuinely spooky local legends. Tap whatever you want to make sure we do. (MTL = Montréal, QC = Québec City. 👻 = ghost walk.)</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+  DONTMISS.forEach(o=> dmHTML += optHTML(dmSlot,o));
+  dmHTML += `</div></div>`;
+  html += panel('dontmiss','Don\u2019t miss — sights, history & ghost stories','Pick all', dmHTML);
 
   // --- Days ---
   let openedAll=false;
