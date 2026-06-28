@@ -111,7 +111,13 @@
   .vini{width:21px;height:21px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700;color:#1a1226;border:1.5px solid #fff;}
   .vcount{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);}
   .note{font-size:12.5px;color:var(--ink-soft);font-style:italic;padding:2px 18px 16px;}
-  .locktag{font-family:'Space Mono',monospace;font-size:11px;color:#1a1226;background:var(--cream-2);display:inline-block;padding:4px 9px;border-radius:6px;margin:0 18px 14px;}
+  .locktag{font-family:'Space Mono',monospace;font-size:11px;color:#1c7a45;background:#d9f0e0;display:block;width:fit-content;max-width:calc(100% - 36px);padding:5px 10px;border-radius:6px;margin:0 18px 8px;line-height:1.4;}
+  .planrow{margin:0 18px 7px;}
+  .planname{font-weight:700;font-size:14px;color:var(--ink);}
+  .planvotes{font-family:'Space Mono',monospace;font-size:10.5px;color:#1c7a45;background:#d9f0e0;padding:2px 7px;border-radius:5px;margin-left:6px;}
+  .planfit{font-size:12.5px;color:var(--ink-soft);margin-top:1px;}
+  .planhead{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--coral);margin:9px 18px 4px;}
+  .planbundle{font-size:12px;color:var(--coral);margin:2px 18px 9px;font-style:italic;}
   .pin{display:inline-block;background:var(--coral);color:#fff;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;padding:3px 8px;border-radius:5px;margin:0 18px 14px;text-transform:uppercase;font-weight:700;}
 
   .foot{text-align:center;color:#8d7eae;font-size:12px;margin-top:30px;line-height:1.6;font-family:'Space Mono',monospace;}
@@ -201,6 +207,7 @@ const RESTAURANTS = [
   {id:'schwartz',name:"Schwartz's Deli", desc:'The Main · legendary smoked-meat sandwich since 1928. A lunch rite of passage.', cost:'$', site:'https://schwartzsdeli.com/', q:"Schwartz's Deli Montreal smoked meat"},
   {id:'banquise',name:'La Banquise', desc:'Plateau · iconic poutine, 30+ versions, open 24h. Fun and casual.', cost:'$', site:'https://labanquise.com/en/', q:'La Banquise poutine Montreal'},
   {id:'beautys', name:'Beautys', desc:'Plateau · classic Jewish diner brunch since 1942 — the Mish-Mash omelette.', cost:'$', q:'Beautys Montreal brunch'},
+  {id:'ciccios', name:"Ciccio's (sandwiches to go)", desc:'Italian sandwich counter — perfect to grab subs for the drive to Québec City. Downtown branch at 1212 Av McGill College, a few blocks from the Sheraton; opens 8 AM. The muffuletta travels great.', cost:'$', site:'https://ciccios.com/en', q:"Ciccio's Montreal sandwiches"},
 ];
 
 // ---------- Québec City restaurant shortlist (multi-select) ----------
@@ -219,7 +226,7 @@ const QC_RESTAURANTS = [
 const FOODS = [
   {id:'poutine', name:'Poutine', desc:'Québec\u2019s holy trinity: fries, fresh cheese curds, hot gravy. Get the classic, then a loaded one. Best in show: La Banquise (MTL, 24h) and Chez Ashton (QC).', cost:'must-try', q:'best poutine Montreal Quebec City'},
   {id:'smoked', name:'Montréal smoked meat', desc:'Hand-cut brisket cured 10+ days, piled on rye with yellow mustard. The pilgrimage is Schwartz\u2019s on The Main.', cost:'must-try', q:'Montreal smoked meat Schwartz best'},
-  {id:'bagel', name:'Montréal bagel', desc:'Thinner, sweeter, denser than NYC — hand-rolled, honey-boiled, wood-fired. The eternal rivalry: St-Viateur vs Fairmount (both Mile End, both worth it).', cost:'must-try', site:'https://fairmountbagel.com/', q:'Montreal bagel St-Viateur Fairmount'},
+  {id:'bagel', name:'Montréal bagel', desc:'Thinner, sweeter, denser than NYC — hand-rolled, honey-boiled, wood-fired. The eternal rivalry: St-Viateur vs Fairmount (both Mile End, both worth it).', cost:'must-try', site:'https://fairmountbagel.com/', vid:'https://www.tiktok.com/@stviateurbagel', q:'Montreal bagel St-Viateur Fairmount'},
   {id:'tourtiere', name:'Tourtière', desc:'Spiced meat pie, the classic Québécois comfort dish. Best at Aux Anciens Canadiens in the 1676 house in Old Québec.', cost:'must-try', q:'tourtiere Quebec meat pie'},
   {id:'maple', name:'Maple everything (tire d\u2019érable)', desc:'Maple taffy rolled on snow, maple butter, maple pie. Look for it at markets and sugar shacks — and on dessert menus citywide.', cost:'must-try', q:'maple taffy tire erable Quebec'},
   {id:'chomeur', name:'Pouding chômeur', desc:'\u201CUnemployed-person\u2019s pudding\u201D — warm cake drowned in hot maple/brown-sugar syrup. Pure Québécois nostalgia.', cost:'must-try', q:'pouding chomeur Quebec dessert'},
@@ -269,6 +276,8 @@ const FUN = [
   {id:'escapemtl', name:'Escape room — Montréal', desc:'Lots downtown/Plateau (e.g. Échappe-Toi). A 60-min puzzle race for the four of you.', cost:'~$30 CAD/pp', q:'escape room Montreal Echappe-Toi'},
   {id:'defievasion', name:'Défi-Évasion — Québec City', desc:'13+ escape rooms, family-friendly. Heads-up: open Wed–Sun (closed Mon/Tue).', cost:'~$28 CAD/pp', q:'Defi-Evasion Quebec City escape room'},
   {id:'adventurecity', name:'Adventure City Games — Québec City', desc:'Phone-led outdoor mystery walk through Old Québec — explore and solve as you go.', cost:'~$25 CAD/group', q:'Adventure City Games Quebec'},
+  {id:'prisonisland', name:'Prison Island — Montréal', desc:'New downtown spot — 30+ themed challenge "cells" (physical + puzzle), teams of 2–5, ~90 min. Indoor & A/C. 1231 Ste-Catherine W, a short walk from the hotel.', cost:'see site', site:'https://prisonisland-montreal.ca/en/', q:'Prison Island Montreal'},
+  {id:'paintsip', name:'Paint & sip — Montréal', desc:'Guided canvas night with drinks — all four can join (QC drinking age is 18). Book a Paint Nite at a bar, or a drop-in studio like Art Chaos (spin art + cocktails). Best as an afternoon or the evening of Jul 26.', cost:'~$35–60 CAD/pp', q:'paint and sip Montreal'},
 ];
 
 // group: 'trio' = Vanessa/Erik/Sierra (Jul 17–22) · 'all' = everyone (Jul 23+)
@@ -287,7 +296,7 @@ const DAYS = [
     ]},
     {id:'d2n', label:'Tonight', opts:[
       {id:'nasty', name:'The Nasty Show', desc:'Final night, 9:30pm — if we skipped Friday.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
-      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Raunchy hockey rom-com staged musical, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
+      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Raunchy hockey rom-com staged musical — two shows daily, runs Jul 17–19, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
       {id:'dinner', name:'Dinner out (from the shortlist) + free outdoor comedy', desc:'A proper dinner, then wander the festival grounds.', cost:'—', q:'best restaurants Quartier des Spectacles'},
     ]}
   ]},
@@ -298,7 +307,7 @@ const DAYS = [
     ]},
     {id:'d3n', label:'Tonight (last comedy openers)', opts:[
       {id:'nasty', name:'The Nasty Show', desc:'Its final night, 9:30pm.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
-      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Final night, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
+      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Final day (Jul 19) — two shows, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night on the festival grounds.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
   ]},
@@ -322,7 +331,7 @@ const DAYS = [
     ]},
     {id:'d5n', label:'Tonight', opts:[
       {id:'nasty', name:'The Nasty Show (added night)', desc:'9:30pm, Club Soda — make-up option.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
-      {id:'british', name:'Brit(ish) showcase', desc:'UK / Irish / Commonwealth comics, Gesù.', cost:'see site', jfl:true, q:'Brit(ish) Just for Laughs Gesu'},
+      {id:'british', name:'Brit(ish) showcase', desc:'UK / Irish / Commonwealth comics. Runs Jul 21–25, Gesù (see site for nightly time).', cost:'see site', jfl:true, q:'Brit(ish) Just for Laughs Gesu'},
       {id:'bamford', name:'Maria Bamford', desc:'Alt-comedy cult favorite, 7pm, Studio TD.', cost:'see site', jfl:true, q:'Maria Bamford Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
@@ -338,23 +347,37 @@ const DAYS = [
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Calmer night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
   ]},
-  {id:'d7', date:'Thu Jul 23', title:'Savannah arrives · Seinfeld', group:'all', pin:'Savannah lands today', locked:'★ Locked in: Jerry Seinfeld Live — 6:30pm, Salle Wilfrid-Pelletier', slots:[
-    {id:'d7n', label:'After Seinfeld (optional)', opts:[
-      {id:'funches', name:'Ron Funches', desc:'Feel-good star (Loot, Inside Out 2), 9:30pm, Gesù.', cost:'see site', jfl:true, q:'Ron Funches Just for Laughs'},
-      {id:'smosh', name:'Smosh Reads Reddit Stories Live', desc:'Viral YouTube crew live — fun for the girls. Tonight only.', cost:'see site', jfl:true, q:'Smosh Reads Reddit Stories Live Just for Laughs'},
-      {id:'welcome', name:'Welcome dinner for Savannah', desc:'Keep it easy — a shortlist spot, everyone together.', cost:'—', q:'best restaurants Montreal downtown'},
+  {id:'d7', date:'Thu Jul 23', title:'Savannah arrives · Seinfeld + Midnight Surprise', group:'all', pin:'Savannah lands today', locked:['★ BOOKED — Jerry Seinfeld · Thu Jul 23, 6:30 PM · Salle Wilfrid-Pelletier, Place des Arts','★ BOOKED — Midnight Surprise · Thu Jul 23, 11:59 PM (doors 10:59) · Le Studio TD · all 4 of us'], slots:[
+    {id:'d7d', label:'Daytime (before the 6:30 Seinfeld show)', opts:[
+      {id:'d7welcome', name:'Easy downtown + greet Savannah', desc:'Low-key — lunch near the hotel, settle Savannah in before the big night.', cost:'—', tag:'down', q:'things to do downtown Montreal'},
+      {id:'d7oldmtl', name:'Quick Old Montréal stroll', desc:'If everyone\u2019s up for it — cobblestones & the Old Port before dinner.', cost:'—', q:'Old Montreal walk'},
+      {id:'d7rest', name:'Rest up for the late night', desc:'Midnight Surprise runs till ~1:30am — pace yourselves.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal'},
+    ]},
+    {id:'d7n', label:'Between the shows (optional)', opts:[
+      {id:'funches', name:'Ron Funches', desc:'Feel-good star (Loot, Inside Out 2), 9:30pm, Gesù — fits between Seinfeld and the midnight show.', cost:'see site', jfl:true, q:'Ron Funches Just for Laughs'},
+      {id:'welcome', name:'Welcome dinner for Savannah', desc:'Keep it easy — a shortlist spot, everyone together before the midnight show.', cost:'—', q:'best restaurants Montreal downtown'},
     ]}
-  ], note:'Savannah lands this morning — leave airport-pickup + transfer time before the 6:30 Seinfeld show.'},
+  ], note:'Big day: Seinfeld 6:30 PM, then Midnight Surprise at 11:59 PM (out ~1:30 AM). Savannah joins for the midnight show — her flight needs to land with time to reach Le Studio TD before the 10:59 PM doors. Confirm her arrival time.'},
   {id:'d8', date:'Fri Jul 24', title:'Gala night', group:'all', slots:[
+    {id:'d8d', label:'Daytime', opts:[
+      {id:'d8mtroyal', name:'Mount Royal + Plateau wander', desc:'Lookout over the city, then coffee/brunch in the Plateau.', cost:'Free', tag:'rec', q:'Mount Royal Plateau Montreal'},
+      {id:'d8oldport', name:'Old Montréal + Pointe-à-Callière', desc:'Cobblestones, the Old Port, and the archaeology museum on the founding site.', cost:'museum ~$25', q:'Pointe-a-Calliere Old Montreal'},
+      {id:'d8fun', name:'A Fun pick — Prison Island / escape room / paint & sip', desc:'Knock one out this afternoon (see the live plan up top).', cost:'see Fun', q:'Prison Island Montreal'},
+    ]},
     {id:'d8n', label:'Pick your gala / show (an early + a 9:30 pair nicely)', opts:[
       {id:'birbiglia', name:'Mike Birbiglia Gala', desc:'Hosted gala, 6:30pm, Théâtre Maisonneuve.', cost:'see site', jfl:true, q:'Mike Birbiglia gala Just for Laughs'},
       {id:'atsuko', name:'Atsuko Okatsuka Gala', desc:'Hosted gala, 9:30pm, Théâtre Maisonneuve.', cost:'see site', jfl:true, q:'Atsuko Okatsuka gala Just for Laughs'},
-      {id:'awards', name:'JFL Awards Show', desc:'Star-studded awards night, MTELUS.', cost:'see site', jfl:true, q:'Just for Laughs Awards Show MTELUS'},
+      {id:'awards', name:'JFL Awards Show', desc:'Star-studded awards night — Jul 24, MTELUS (see site for time).', cost:'see site', jfl:true, q:'Just for Laughs Awards Show MTELUS'},
       {id:'gge', name:'Girls Gotta Eat', desc:'Hit dating/relationships podcast live, 9:30pm, Club Soda.', cost:'see site', jfl:true, q:'Girls Gotta Eat Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
   ]},
   {id:'d9', date:'Sat Jul 25', title:'Fluffy vs. Weird Al', group:'all', slots:[
+    {id:'d9d', label:'Daytime', opts:[
+      {id:'d9market', name:'Mile End: bagels + markets', desc:'St-Viateur / Fairmount bagels, Jean-Talon Market, indie shops.', cost:'pay as you go', tag:'rec', q:'Mile End Jean-Talon Market Montreal'},
+      {id:'d9garden', name:'Botanical Garden / Olympic Park', desc:'Gardens, the Biodôme, and the tower view — a relaxed half-day.', cost:'~$22 CAD', q:'Montreal Botanical Garden Biodome'},
+      {id:'d9rest', name:'Pool / rest before the late outdoor show', desc:'Weird Al is a late, big-crowd night — save energy.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal pool'},
+    ]},
     {id:'d9n', label:'Both are July-25-only and overlap — so:', opts:[
       {id:'gerry_al', name:'Gerry Dee gala (6:30) → Weird Al (9pm)', desc:'The only way to get a gala AND all of Weird Al — no conflict. Trades Fluffy for Gerry Dee.', cost:'gala $ + free', jfl:true, q:'Gerry Dee gala Just for Laughs'},
       {id:'fluffy', name:'Fluffy gala (9:30)', desc:'Catch the start of Weird Al outside (9pm), then walk into Fluffy — venues are steps apart.', cost:'see site', jfl:true, site:'https://www.placedesarts.com/en/event/gabriel-fluffy-iglesias-gala', q:'Gabriel Iglesias Fluffy gala Just for Laughs'},
@@ -374,11 +397,15 @@ const DAYS = [
     ]}
   ], note:'Check-out is tomorrow by noon — pack tonight.'},
   {id:'d11', date:'Mon Jul 27', title:'Drive to Québec City', group:'all', travel:true, headerBefore:'Montréal → Québec City',
-    timeline:['By 12:00pm — check out of the Sheraton','Pick up the rental downtown (Vanessa & Erik drive)','~1.5 hrs in — Trois-Rivières for lunch / leg-stretch','Continue along the St. Lawrence','By 4:00pm — check into Hôtel PUR, Québec City'],
+    timeline:['By 12:00pm — check out of the Sheraton','Grab Ciccio\u2019s sandwiches (1212 McGill College) for the road','Pick up the rental downtown (Vanessa & Erik drive)','~1.5 hrs in — Trois-Rivières for lunch / leg-stretch','Continue along the St. Lawrence','By 4:00pm — check into Hôtel PUR, Québec City'],
     slots:[
-      {id:'d11r', label:'How we drive it', opts:[
+      {id:'d11r', label:'Which route (pick one)', single:true, opts:[
         {id:'scenic', name:'Scenic Chemin du Roy (Route 138)', desc:'River views + a Trois-Rivières lunch stop. ~5 hrs with stops.', cost:'rental + gas', tag:'rec', q:'Chemin du Roy Route 138 scenic drive'},
-        {id:'direct', name:'Direct (Hwy 40) + Montmorency Falls', desc:'Faster ~3 hrs; grab Montmorency Falls on the way into the city.', cost:'rental + gas', q:'Montmorency Falls Quebec City'},
+        {id:'direct', name:'Direct (Autoroute 40)', desc:'Fastest way over, ~3 hrs, no river detours.', cost:'rental + gas', q:'Autoroute 40 Montreal Quebec City'},
+      ]},
+      {id:'d11f', label:'Add Montmorency Falls? (works with either route — it\u2019s at the QC end)', single:true, opts:[
+        {id:'falls_arrival', name:'Yes — stop on arrival', desc:'Falls are ~15 min past downtown QC. Adds ~1–1.5 hrs, so you\u2019d reach PUR a little later (they\u2019ll hold bags).', cost:'park ~$10', tag:'rec', q:'Montmorency Falls Quebec City'},
+        {id:'falls_later', name:'No — catch it on the Jul 29 day-trip', desc:'It\u2019s already on your eastern day-trip, so today can stay simple.', cost:'—', tag:'down', q:'Montmorency Falls'},
       ]}
     ], note:'Travel day — allow the whole afternoon. Keep the rental a couple of days for the eastern day-trip (Montmorency, Île d\u2019Orléans, Canyon Sainte-Anne).'},
   {id:'eatqc', eat:true, group:'all', headerBefore:'In Québec City', title:'Where to eat — Québec City', intro:'QC\u2019s food scene is intimate and a touch cheaper than Montréal\u2019s — but the best tables book up fast in summer. Tap every spot you\u2019d go to. 📱 TikTok and 🔎 links on each.', restaurants:QC_RESTAURANTS},
@@ -419,6 +446,7 @@ const DAYS = [
       {id:'orleans2', name:'Île d\u2019Orléans by guided tour', desc:'If you skipped it and dropped the car — a guided island tour.', cost:'varies', tag:'rec', q:'Ile d\u2019Orleans tour from Quebec City'},
     ]},
     {id:'d15n', label:'Last night', opts:[
+      {id:'capitales', name:'Québec Capitales ballgame', desc:'Indie pro baseball vs Trois-Rivières — 7:05 PM, Stade Canac (short ride from PUR). Cheap, lively, easy last-night outing.', cost:'~$14–28 CAD/pp', tag:'rec', q:'Quebec Capitales baseball Stade Canac'},
       {id:'lastdin', name:'Final dinner (from the shortlist)', desc:'One more great QC meal.', cost:'—', q:'best restaurants Quebec City'},
       {id:'packqc', name:'Light night + pack', desc:'Early-ish night before the travel day.', cost:'—', tag:'down', q:'Hotel PUR Quebec'},
     ]}
@@ -501,7 +529,7 @@ function castVote(slotId, optId, multi){
 }
 window.castVote = castVote;
 
-let openSections = { hotels:false, flights:false, eatmtl:true, foods:false, dontmiss:false, fun:false, eatqc:false };
+let openSections = { plan:true, hotels:false, flights:false, eatmtl:true, foods:false, dontmiss:false, fun:false, eatqc:false };
 function toggleSection(k){ openSections[k]=!openSections[k]; render(); }
 window.toggleSection = toggleSection;
 function panel(key, title, tagText, bodyHTML){
@@ -539,7 +567,7 @@ function optHTML(slot, o){
               ? `<a class="lk g" href="${g(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔎 Look it up</a>`
               : ''}
           ${o.vid
-              ? `<a class="lk t" href="${o.vid}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Video</a>`
+              ? `<a class="lk t" href="${o.vid}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${o.vid.includes('tiktok.com')?'📱 TikTok':'▶ Video'}</a>`
               : `<a class="lk t" href="${tk(o.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📱 TikTok</a>`}
           ${leader?'<span class="lead">★ Leading</span>':''}
           <span class="voters">${who.map(n=>`<span class="vini" style="background:${colorOf(n)}" title="${n}">${ini(n)}</span>`).join('')}${who.length?`<span class="vcount">${who.length}</span>`:''}</span>
@@ -548,6 +576,83 @@ function optHTML(slot, o){
     </div>
   </div>`;
 }
+
+// ---- Smart "Family plan": surfaces anything 3+ of you agree on, with a suggested fit ----
+const PLAN_TH = 2; // surface anything 2+ of you agree on
+const PLAN = {
+  // activities (FUN)
+  virtualroom:{slot:'fun',city:'Montréal',zone:'Old Montréal',when:'a free Montréal afternoon',why:'indoor; pairs with an Old-Montréal day'},
+  quizroom:{slot:'fun',city:'Montréal',zone:'Downtown',when:'an early Montréal evening',why:'quick & right downtown'},
+  escapemtl:{slot:'fun',city:'Montréal',zone:'Downtown / Plateau',when:'a Montréal afternoon',why:'central, ~60 min'},
+  prisonisland:{slot:'fun',city:'Montréal',zone:'Downtown',when:'Jul 24 or 26 afternoon',why:'5-min walk from the Sheraton'},
+  paintsip:{slot:'fun',city:'Montréal',zone:'Downtown',when:'Sun Jul 26 afternoon',why:'lighter day, no show to rush to'},
+  defievasion:{slot:'fun',city:'Québec City',zone:'Saint-Roch',when:'a QC afternoon (Wed–Sun)',why:'closed Mon/Tue — near PUR'},
+  adventurecity:{slot:'fun',city:'Québec City',zone:'Old Québec',when:'your first QC day (Jul 28)',why:'it walks you through Old Québec'},
+  // sights (DONTMISS)
+  notredame:{slot:'dontmiss',city:'Montréal',zone:'Old Montréal',when:'an Old-Montréal day',why:'bundle with the Old Port'},
+  oldmtl:{slot:'dontmiss',city:'Montréal',zone:'Old Montréal',when:'an Old-Montréal day',why:'pairs with Notre-Dame & Pointe-à-Callière'},
+  mtroyal:{slot:'dontmiss',city:'Montréal',zone:'Mont-Royal',when:'a clear morning',why:'best skyline view'},
+  pointe:{slot:'dontmiss',city:'Montréal',zone:'Old Montréal',when:'same day as Old Montréal',why:'a block from Notre-Dame'},
+  griffintown:{slot:'dontmiss',city:'Montréal',zone:'Griffintown',when:'a Montréal evening',why:'walking ghost tour near Old MTL'},
+  frontenac:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'first QC day (Jul 28)',why:'the heart of Old Québec'},
+  petitchamplain:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'same day as Château Frontenac',why:'right below the Château'},
+  citadelle:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'Thu Jul 30',why:'pairs with the Plains of Abraham'},
+  plains:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'Thu Jul 30',why:'next to the Citadelle'},
+  ramparts:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'while walking Old Québec',why:'you\u2019ll pass right by them'},
+  ghostqc:{slot:'dontmiss',city:'Québec City',zone:'Old Québec',when:'a QC evening',why:'after dinner in Old Québec'},
+};
+const MEAL_WHEN = { brunch:'a slow morning (brunch)', lunch:'a lunch stop', dinner:'an open dinner night', lunchdinner:'lunch or dinner', casual:'a casual / late-night bite', togo:'grab for the drive to QC' };
+const REST_INFO = {
+  timeout:{zone:'Downtown',meal:'lunchdinner'}, jatoba:{zone:'Downtown',meal:'dinner'}, celeste:{zone:'Downtown',meal:'dinner'},
+  apdc:{zone:'Plateau',meal:'dinner'}, lexpress:{zone:'Plateau',meal:'dinner'}, violon:{zone:'Plateau',meal:'dinner'},
+  schwartz:{zone:'The Main',meal:'lunch'}, banquise:{zone:'Plateau',meal:'casual'}, beautys:{zone:'Plateau',meal:'brunch'}, ciccios:{zone:'Downtown',meal:'togo'},
+  lapin:{zone:'Petit-Champlain',meal:'lunchdinner'}, continental:{zone:'Old Québec',meal:'dinner'}, boulay:{zone:'Saint-Roch',meal:'dinner'}, sagamite:{zone:'Old Québec',meal:'dinner'}, ouroboros:{zone:'Saint-Roch',meal:'dinner'}, ashton:{zone:'around town',meal:'casual'}, cochon:{zone:'Old Québec',meal:'casual'}
+};
+
+function planRow(name,votes,when,why){
+  return `<div class="planrow"><span class="planname">★ ${name}</span><span class="planvotes">✓ ${votes}</span>`
+       + (when?`<div class="planfit">→ ${when}${why?` · ${why}`:''}</div>`:(why?`<div class="planfit">${why}</div>`:''))
+       + `</div>`;
+}
+function planHTML(){
+  const fav=(arr,slot)=>arr.filter(o=>tallyFor(slot,o.id).length>=PLAN_TH);
+  const funF=fav(FUN,'fun'), dmF=fav(DONTMISS,'dontmiss'), foodF=fav(FOODS,'food'), mtlR=fav(RESTAURANTS,'eat'), qcR=fav(QC_RESTAURANTS,'eatqc');
+  const total=funF.length+dmF.length+foodF.length+mtlR.length+qcR.length;
+  let h=`<div class="ticket"><div class="intro" style="padding-top:14px">As soon as <b>2 or more of you</b> tap the same thing, it lands here with a suggested day — matched to where you already are and kept clear of your booked show nights. Keep voting and the plan fills itself in.</div>`;
+  if(!total){ h+=`<div class="note" style="font-style:normal;color:var(--ink-soft)">Nothing has 2+ votes yet — tap your picks in the sections below ↓</div></div>`; return h; }
+
+  // Activities + sights, grouped by city, with same-zone bundling
+  const acts=[].concat(funF.map(o=>['fun',o]), dmF.map(o=>['dontmiss',o]))
+    .map(([slot,o])=>({o,n:tallyFor(slot,o.id).length,p:PLAN[o.id]})).filter(x=>x.p);
+  if(acts.length){
+    h+=`<div class="slot-lbl" style="margin-top:10px">What to do — suggested days</div>`;
+    ['Montréal','Québec City'].forEach(city=>{
+      const inCity=acts.filter(x=>x.p.city===city);
+      if(!inCity.length) return;
+      h+=`<div class="planhead">${city}</div>`;
+      inCity.forEach(x=> h+=planRow(x.o.name,x.n,x.p.when,x.p.why));
+      const zones={}; inCity.forEach(x=>{(zones[x.p.zone]=zones[x.p.zone]||[]).push(x.o.name);});
+      Object.keys(zones).forEach(z=>{ if(zones[z].length>1) h+=`<div class="planbundle">↪ All in ${z} — do them the same day: ${zones[z].join(', ')}</div>`; });
+    });
+  }
+
+  // Restaurants → slotted to the right meal
+  if(mtlR.length||qcR.length){
+    h+=`<div class="slot-lbl" style="margin-top:12px">Crowd-favorite tables — slotted to the right meal</div>`;
+    const restRow=(o,slot)=>{ const i=REST_INFO[o.id]||{}; return planRow(o.name, tallyFor(slot,o.id).length, MEAL_WHEN[i.meal]||'a meal out', i.zone||''); };
+    if(mtlR.length){ h+=`<div class="planhead">Montréal</div>`; mtlR.forEach(o=> h+=restRow(o,'eat')); }
+    if(qcR.length){ h+=`<div class="planhead">Québec City</div>`; qcR.forEach(o=> h+=restRow(o,'eatqc')); }
+  }
+
+  // Foods → just make sure we eat them
+  if(foodF.length){
+    h+=`<div class="slot-lbl" style="margin-top:12px">Don\u2019t-miss bites</div>`;
+    foodF.forEach(o=> h+=planRow(o.name,tallyFor('food',o.id).length,'',''));
+  }
+  h+=`</div>`;
+  return h;
+}
+
 
 function render(){
   const y=window.scrollY;
@@ -558,6 +663,9 @@ function render(){
 
   let html='';
   if(!me_voter) html += `<div class="pickfirst">↑ Pick your name to start voting (you can still browse below)</div>`;
+
+  // --- Family plan (live, auto-fills from votes) ---
+  html += panel('plan','🧭 Family plan (live)','Auto', planHTML());
 
   // --- Hotels (collapsible) ---
   let hotelsHTML='';
@@ -622,10 +730,10 @@ function render(){
     html += `<div class="ticket${savLocked?' locked':''}${day.travel?' travelcard':''}">`;
     html += `<div class="stub-top"><span class="date">${day.date}</span><span class="dtitle">${day.title}</span><span class="grp">${day.travel?'🚗 Drive':(day.group==='trio'?'V · E · Sierra':'All four')}</span></div><div class="perf"></div>`;
     if(day.pin) html += `<div class="pin">${day.pin}</div>`;
-    if(day.locked) html += `<div class="locktag">${day.locked}</div>`;
+    if(day.locked){ (Array.isArray(day.locked)?day.locked:[day.locked]).forEach(function(L){ html += `<div class="locktag">${L}</div>`; }); }
     if(day.travel && day.timeline){ html += `<div class="intro">Travel day — the shape of it:</div><ul class="timeline">${day.timeline.map(t=>`<li>${t}</li>`).join('')}</ul>`; }
     if(savLocked){ html += `<div class="note">Before you land — Vanessa, Erik & Sierra are choosing this one.</div>`; }
-    else if(day.slots){ day.slots.forEach(slot=>{ slot.multi=true; html += `<div class="slot"><div class="slot-lbl">${slot.label}</div>`; slot.opts.forEach(o=> html += optHTML(slot,o)); html += `</div>`; }); }
+    else if(day.slots){ day.slots.forEach(slot=>{ slot.multi = !slot.single; html += `<div class="slot"><div class="slot-lbl">${slot.label}</div>`; slot.opts.forEach(o=> html += optHTML(slot,o)); html += `</div>`; }); }
     if(day.note) html += `<div class="note">${day.note}</div>`;
     html += `</div>`;
   });
