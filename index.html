@@ -119,6 +119,22 @@
   .planhead{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--coral);margin:9px 18px 4px;}
   .planbundle{font-size:12px;color:var(--coral);margin:2px 18px 9px;font-style:italic;}
   .pin{display:inline-block;background:var(--coral);color:#fff;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;padding:3px 8px;border-radius:5px;margin:0 18px 14px;text-transform:uppercase;font-weight:700;}
+  .meals{margin:0 18px 14px;padding:11px 0 4px;border-top:1px dashed #e6ddd0;}
+  .mealrow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:9px;}
+  .meallbl{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft);min-width:74px;font-weight:700;}
+  .mealchip{font-size:12px;color:var(--ink);background:#f3ece0;border:1px solid #e3d8c6;border-radius:14px;padding:4px 10px;cursor:pointer;font-family:inherit;}
+  .mealchip:hover{background:#ece2d0;}
+  .mealpick{font-size:13px;font-weight:700;color:#1c7a45;background:#d9f0e0;border-radius:14px;padding:4px 11px;}
+  .mealx{border:none;background:none;color:#b04a3a;font-size:14px;cursor:pointer;padding:0 2px;line-height:1;}
+  .mealhint{font-size:12px;color:var(--ink-soft);font-style:italic;}
+  .mealchip.addown{border-style:dashed;background:#fffdf8;color:var(--coral);}
+  .mealadd{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px;}
+  .addbtn.ghost{background:#f3ece0;color:var(--ink);border:1px solid #e3d8c6;}
+  .evening-lbl{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--coral);margin:4px 18px 7px;font-weight:700;}
+  .addplace{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed #e6ddd0;}
+  .addinput{flex:1;min-width:140px;font-size:13px;padding:7px 10px;border:1px solid #e3d8c6;border-radius:8px;font-family:inherit;background:#fffdf8;}
+  .addsel{font-size:12px;padding:7px 8px;border:1px solid #e3d8c6;border-radius:8px;font-family:inherit;background:#fffdf8;}
+  .addbtn{font-size:12px;font-weight:700;color:#fff;background:var(--coral);border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-family:inherit;}
 
   .foot{text-align:center;color:#8d7eae;font-size:12px;margin-top:30px;line-height:1.6;font-family:'Space Mono',monospace;}
   .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--cream);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;border:1px solid rgba(255,255,255,.15);z-index:9;}
@@ -284,19 +300,17 @@ const FUN = [
 const DAYS = [
   {id:'d1', date:'Fri Jul 17', title:'Arrival day', group:'trio', slots:[
     {id:'d1n', label:'Tonight', opts:[
-      {id:'nasty', name:'The Nasty Show', desc:'9:30pm, Club Soda (~12-min walk). Very raunchy, adults-only comedy.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy', desc:'Place des Festivals, right outside the hotel. Come & go.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
       {id:'chill', name:'Chill night in', desc:'Dinner nearby + the 37th-floor M Club lounge, early night after the 4am wakeup.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal M Club'},
     ]}
   ], note:'Land YUL 10:17am \u2014 taxi/Uber ~25 min (~$45\u201350 CAD) downtown; room ready ~3pm.'},
-  {id:'d2', date:'Sat Jul 18', title:'First full day', group:'trio', slots:[
+  {id:'d2', date:'Sat Jul 18', title:'First full day', group:'trio', locked:['★ BOOKED — The Nasty Show · Sat Jul 18, 9:30 PM (doors 9:00) · Club Soda · 3× Regular GA, cabaret/seated (V·E·Sierra) · order #10782171'], slots:[
     {id:'d2d', label:'Daytime', opts:[
       {id:'oldmtl', name:'Old Montréal', desc:'Notre-Dame Basilica, the Old Port, cobblestone streets.', cost:'Basilica ~$15', q:'Old Montreal Notre-Dame Basilica'},
       {id:'mtroyal', name:'Mount Royal', desc:'Hike or quick Uber up to the lookout over the whole city.', cost:'Free', tag:'rec', q:'Mount Royal Kondiaronk lookout'},
     ]},
-    {id:'d2n', label:'Tonight', opts:[
-      {id:'nasty', name:'The Nasty Show', desc:'Final night, 9:30pm — if we skipped Friday.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
-      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Raunchy hockey rom-com staged musical — two shows daily, runs Jul 17–19, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
+    {id:'d2n', label:'Around the show (Nasty Show booked, 9:30 PM)', opts:[
+      {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Raunchy hockey rom-com staged musical — two shows daily, runs Jul 17–19, Espace St-Denis (earlier show could work before Nasty).', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
       {id:'dinner', name:'Dinner out (from the shortlist) + free outdoor comedy', desc:'A proper dinner, then wander the festival grounds.', cost:'—', q:'best restaurants Quartier des Spectacles'},
     ]}
   ]},
@@ -306,7 +320,6 @@ const DAYS = [
       {id:'leftover', name:'Old Montréal or Mount Royal', desc:'Whichever one we didn\u2019t do Saturday.', cost:'varies', q:'things to do Old Montreal Mount Royal'},
     ]},
     {id:'d3n', label:'Tonight (last comedy openers)', opts:[
-      {id:'nasty', name:'The Nasty Show', desc:'Its final night, 9:30pm.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
       {id:'heated', name:'Heated Rivalry: Musical Parody', desc:'Final day (Jul 19) — two shows, Espace St-Denis.', cost:'see site', jfl:true, q:'Heated Rivalry Unauthorized Musical Parody Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night on the festival grounds.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
@@ -316,10 +329,8 @@ const DAYS = [
       {id:'bota', name:'Bota Bota spa', desc:'Nordic spa on a boat in the Old Port. Pure relaxation.', cost:'~$70–100 CAD', tag:'down', q:'Bota Bota spa Montreal'},
       {id:'mmfa', name:'Museum of Fine Arts + Golden Square Mile', desc:'Walkable from the hotel.', cost:'~$24 CAD', q:'Montreal Museum of Fine Arts'},
     ]},
-    {id:'d4n', label:'Tonight — the proper dinner out', opts:[
-      {id:'jatoba', name:'Jatoba', desc:'Sleek Asian-inspired, downtown, near the hotel.', cost:'$$$', q:'Jatoba restaurant Montreal'},
-      {id:'celeste', name:'Celeste', desc:'Buzzy 2026 Italian in a stunning room, downtown.', cost:'$$$', q:'Celeste restaurant Maison Alcan Montreal'},
-      {id:'apdc', name:'Au Pied de Cochon', desc:'Decadent, festive Québécois — the blow-out.', cost:'$$$', site:'https://www.aupieddecochon.ca/', q:'Au Pied de Cochon Montreal'},
+    {id:'d4n', label:'Tonight — proper dinner out, or low-key?', opts:[
+      {id:'d4proper', name:'Proper dinner out', desc:'We\u2019ll slot one of your top-voted Montréal restaurants here — pick spots in \u201cWhere to eat\u201d up top; the winners show in the Family Plan.', cost:'see list up top', tag:'rec', q:'best restaurants Montreal'},
       {id:'outdoor', name:'Casual + free outdoor comedy', desc:'Keep it low-key tonight.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
   ]},
@@ -330,7 +341,6 @@ const DAYS = [
       {id:'olympic', name:'Olympic Park + Botanical Garden', desc:'Space for Life: Biodôme, Insectarium.', cost:'~$45 CAD', q:'Montreal Botanical Garden Biodome Olympic Park'},
     ]},
     {id:'d5n', label:'Tonight', opts:[
-      {id:'nasty', name:'The Nasty Show (added night)', desc:'9:30pm, Club Soda — make-up option.', cost:'~$50–65 CAD', jfl:true, q:'The Nasty Show Just for Laughs'},
       {id:'british', name:'Brit(ish) showcase', desc:'UK / Irish / Commonwealth comics. Runs Jul 21–25, Gesù (see site for nightly time).', cost:'see site', jfl:true, q:'Brit(ish) Just for Laughs Gesu'},
       {id:'bamford', name:'Maria Bamford', desc:'Alt-comedy cult favorite, 7pm, Studio TD.', cost:'see site', jfl:true, q:'Maria Bamford Just for Laughs'},
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Easy night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
@@ -347,17 +357,17 @@ const DAYS = [
       {id:'outdoor', name:'Free outdoor comedy + dinner', desc:'Calmer night.', cost:'Free', q:'Place des Festivals Just for Laughs free shows'},
     ]}
   ]},
-  {id:'d7', date:'Thu Jul 23', title:'Savannah arrives · Seinfeld + Midnight Surprise', group:'all', pin:'Savannah lands today', locked:['★ BOOKED — Jerry Seinfeld · Thu Jul 23, 6:30 PM · Salle Wilfrid-Pelletier, Place des Arts','★ BOOKED — Midnight Surprise · Thu Jul 23, 11:59 PM (doors 10:59) · Le Studio TD · all 4 of us'], slots:[
-    {id:'d7d', label:'Daytime (before the 6:30 Seinfeld show)', opts:[
-      {id:'d7welcome', name:'Easy downtown + greet Savannah', desc:'Low-key — lunch near the hotel, settle Savannah in before the big night.', cost:'—', tag:'down', q:'things to do downtown Montreal'},
-      {id:'d7oldmtl', name:'Quick Old Montréal stroll', desc:'If everyone\u2019s up for it — cobblestones & the Old Port before dinner.', cost:'—', q:'Old Montreal walk'},
-      {id:'d7rest', name:'Rest up for the late night', desc:'Midnight Surprise runs till ~1:30am — pace yourselves.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal'},
+  {id:'d7', date:'Thu Jul 23', title:'Savannah arrives · Seinfeld + Midnight Surprise', group:'all', pin:'Savannah lands today', locked:['★ BOOKED — Jerry Seinfeld · Thu Jul 23, 9:30 PM · Salle Wilfrid-Pelletier, Place des Arts · Mezz-1, Row H, seats 101–107','★ BOOKED — Midnight Surprise · Thu Jul 23, 11:59 PM (doors 10:59) · Le Studio TD · all 4 of us'], slots:[
+    {id:'d7d', label:'Daytime & early evening (before the 9:30 Seinfeld show)', opts:[
+      {id:'d7welcome', name:'Easy downtown + greet Savannah', desc:'Low-key — settle Savannah in; you\u2019ve got the whole day before the 9:30 show.', cost:'—', tag:'down', q:'things to do downtown Montreal'},
+      {id:'d7oldmtl', name:'Quick Old Montréal stroll', desc:'Cobblestones & the Old Port in the afternoon.', cost:'—', q:'Old Montreal walk'},
+      {id:'d7rest', name:'Rest up for the late night', desc:'Seinfeld 9:30 then Midnight Surprise till ~1:30am — pace yourselves.', cost:'—', tag:'down', q:'Le Centre Sheraton Montreal'},
     ]},
-    {id:'d7n', label:'Between the shows (optional)', opts:[
-      {id:'funches', name:'Ron Funches', desc:'Feel-good star (Loot, Inside Out 2), 9:30pm, Gesù — fits between Seinfeld and the midnight show.', cost:'see site', jfl:true, q:'Ron Funches Just for Laughs'},
-      {id:'welcome', name:'Welcome dinner for Savannah', desc:'Keep it easy — a shortlist spot, everyone together before the midnight show.', cost:'—', q:'best restaurants Montreal downtown'},
+    {id:'d7n', label:'Before Seinfeld — dinner (or squeeze an early show)', opts:[
+      {id:'welcome', name:'Welcome dinner for Savannah', desc:'She just landed — a relaxed dinner (pick from the top list) before the 9:30 show.', cost:'see top list', tag:'rec', q:'best restaurants Montreal downtown'},
+      {id:'jkb', name:'Optional early show: Joel Kim Booster (7pm)', desc:'7pm, Studio TD — only if Savannah lands early; ends in time for the 9:30 Seinfeld.', cost:'see site', jfl:true, q:'Joel Kim Booster Just for Laughs'},
     ]}
-  ], note:'Big day: Seinfeld 6:30 PM, then Midnight Surprise at 11:59 PM (out ~1:30 AM). Savannah joins for the midnight show — her flight needs to land with time to reach Le Studio TD before the 10:59 PM doors. Confirm her arrival time.'},
+  ], note:'Big night: Seinfeld 9:30 PM, then Midnight Surprise 11:59 PM (out ~1:30 AM) — both in the Place des Arts complex, a few minutes apart, so the 9:30→11:59 hop is easy. All four are at Seinfeld, so Savannah\u2019s flight needs to land in time to reach Place des Arts before 9:30 PM (more breathing room than the old 6:30). Confirm her arrival time.'},
   {id:'d8', date:'Fri Jul 24', title:'Gala night', group:'all', slots:[
     {id:'d8d', label:'Daytime', opts:[
       {id:'d8mtroyal', name:'Mount Royal + Plateau wander', desc:'Lookout over the city, then coffee/brunch in the Plateau.', cost:'Free', tag:'rec', q:'Mount Royal Plateau Montreal'},
@@ -434,9 +444,7 @@ const DAYS = [
       {id:'plains', name:'Plains of Abraham + Citadelle', desc:'Huge clifftop park with river views; changing of the guard at the Citadelle.', cost:'Citadelle ~$18', tag:'rec', q:'Plains of Abraham Citadelle Quebec City'},
     ]},
     {id:'d14n', label:'Farewell dinner (Erik flies out before dawn)', opts:[
-      {id:'flambe', name:'Le Continental — tableside flambé', desc:'A memorable send-off; classic old-Québec theatre.', cost:'$$$', q:'Le Continental Quebec City'},
-      {id:'anciens2', name:'Aux Anciens Canadiens', desc:'Traditional Québécois in the 1676 house — very QC.', cost:'$$$', site:'https://auxancienscanadiens.qc.ca/', q:'Aux Anciens Canadiens Quebec City'},
-      {id:'pick', name:'Whatever won the QC shortlist', desc:'Go with the family favorite from above.', cost:'—', q:'best restaurants Quebec City'},
+      {id:'pick', name:'Farewell dinner — from your top Québec City picks', desc:'Slot the family-favorite QC restaurant here (see \u201cWhere to eat — Québec City\u201d up top and the Family Plan). Make it the group celebration.', cost:'see list up top', tag:'rec', q:'best restaurants Quebec City'},
     ]}
   ], note:'Return the rental this morning if the day-trips are done — you won\u2019t need it after today. Make tonight the group celebration; Erik\u2019s car leaves very early tomorrow.'},
   {id:'d15', date:'Fri Jul 31', title:'The three of us', group:'all', pin:'Erik departs YQB 5:00am', slots:[
@@ -458,6 +466,10 @@ const DAYS = [
 
 let me_voter = null;
 let votes = {}; // { voter: { slotId: optId | [optId,...] } }
+let extras = { places:{mtl:[],qc:[]}, assign:{} }; // shared: family-added places + which restaurant is pinned to each day's meal
+const EMPTY_EXTRAS = { places:{mtl:[],qc:[]}, assign:{} };
+function toArr(x){ return Array.isArray(x) ? x : (x && typeof x==='object' ? Object.values(x) : []); }
+function applyExtras(o){ o=o||{}; extras = { places:{ mtl:toArr(o.places&&o.places.mtl), qc:toArr(o.places&&o.places.qc) }, assign:(o.assign&&typeof o.assign==='object')?o.assign:{} }; render(); }
 
 const $ = s => document.querySelector(s);
 const toast = (m)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1900);};
@@ -476,11 +488,12 @@ const Store = {
         this.db = firebase.database();
         this.mode = 'firebase';
         this.db.ref('trip/votes').on('value', s => onChange(s.val() || {}));
+        this.db.ref('trip/extras').on('value', s => applyExtras(s.val() || EMPTY_EXTRAS));
         return;
       }catch(e){ console.warn('Firebase init failed, falling back.', e); }
     }
-    if(window.storage){ this.mode='claude'; onChange(await this.readClaude()); return; }
-    this.mode='local'; onChange(this.readLocal());
+    if(window.storage){ this.mode='claude'; onChange(await this.readClaude()); applyExtras(await this.readExtrasClaude()); return; }
+    this.mode='local'; onChange(this.readLocal()); applyExtras(this.readExtrasLocal());
   },
   async readClaude(){ const out={}; for(const v of VOTERS){ try{ const r=await window.storage.get('votes:'+v.name,true); out[v.name]=(r&&r.value)?JSON.parse(r.value):{}; }catch(_){ out[v.name]={}; } } return out; },
   readLocal(){ try{ return JSON.parse(localStorage.getItem('trip:votes')||'{}'); }catch(_){ return {}; } },
@@ -489,9 +502,16 @@ const Store = {
     else if(this.mode==='claude'){ try{ await window.storage.set('votes:'+name, JSON.stringify(obj), true); }catch(e){ toast('Save failed'); } }
     else { try{ const all=this.readLocal(); all[name]=obj; localStorage.setItem('trip:votes', JSON.stringify(all)); }catch(e){ toast('Save failed'); } }
   },
+  async readExtrasClaude(){ try{ const r=await window.storage.get('extras',true); return (r&&r.value)?JSON.parse(r.value):EMPTY_EXTRAS; }catch(_){ return EMPTY_EXTRAS; } },
+  readExtrasLocal(){ try{ return JSON.parse(localStorage.getItem('trip:extras')||'null')||EMPTY_EXTRAS; }catch(_){ return EMPTY_EXTRAS; } },
+  async setExtras(obj){
+    if(this.mode==='firebase'){ try{ await this.db.ref('trip/extras').set(obj); }catch(e){ toast('Save failed'); } }
+    else if(this.mode==='claude'){ try{ await window.storage.set('extras', JSON.stringify(obj), true); }catch(e){ toast('Save failed'); } }
+    else { try{ localStorage.setItem('trip:extras', JSON.stringify(obj)); }catch(e){ toast('Save failed'); } }
+  },
   async refresh(){
-    if(this.mode==='claude') this.onChange(await this.readClaude());
-    else if(this.mode==='local') this.onChange(this.readLocal());
+    if(this.mode==='claude'){ this.onChange(await this.readClaude()); applyExtras(await this.readExtrasClaude()); }
+    else if(this.mode==='local'){ this.onChange(this.readLocal()); applyExtras(this.readExtrasLocal()); }
   }
 };
 
@@ -606,7 +626,7 @@ const REST_INFO = {
   timeout:{zone:'Downtown',meal:'lunchdinner'}, jatoba:{zone:'Downtown',meal:'dinner'}, celeste:{zone:'Downtown',meal:'dinner'},
   apdc:{zone:'Plateau',meal:'dinner'}, lexpress:{zone:'Plateau',meal:'dinner'}, violon:{zone:'Plateau',meal:'dinner'},
   schwartz:{zone:'The Main',meal:'lunch'}, banquise:{zone:'Plateau',meal:'casual'}, beautys:{zone:'Plateau',meal:'brunch'}, ciccios:{zone:'Downtown',meal:'togo'},
-  lapin:{zone:'Petit-Champlain',meal:'lunchdinner'}, continental:{zone:'Old Québec',meal:'dinner'}, boulay:{zone:'Saint-Roch',meal:'dinner'}, sagamite:{zone:'Old Québec',meal:'dinner'}, ouroboros:{zone:'Saint-Roch',meal:'dinner'}, ashton:{zone:'around town',meal:'casual'}, cochon:{zone:'Old Québec',meal:'casual'}
+  lapin:{zone:'Petit-Champlain',meal:'lunchdinner'}, continental:{zone:'Old Québec',meal:'dinner'}, boulay:{zone:'Saint-Roch',meal:'dinner'}, sagamite:{zone:'Old Québec',meal:'dinner'}, ouroboros:{zone:'Saint-Roch',meal:'dinner'}, ashton:{zone:'around town',meal:'casual'}, cochon:{zone:'Old Québec',meal:'casual'}, anciens:{zone:'Old Québec',meal:'lunchdinner'}
 };
 
 function planRow(name,votes,when,why){
@@ -654,6 +674,88 @@ function planHTML(){
 }
 
 
+// ---- Meals (Breakfast / Lunch / Dinner) fed by the top lists, with family-added places ----
+const MEAL_LABEL = { breakfast:'Breakfast', lunch:'Lunch', dinner:'Dinner' };
+function dayCityOf(day){ return ['d11','d12','d13','d14','d15','d16'].includes(day.id) ? 'qc' : 'mtl'; }
+function matchMeal(meal, m){
+  if(meal==='breakfast') return ['brunch','breakfast'].includes(m);
+  if(meal==='lunch') return ['lunch','lunchdinner','casual','togo'].includes(m);
+  return ['dinner','lunchdinner'].includes(m); // dinner
+}
+function placeName(id, city){
+  if(id==='clublounge') return 'Sheraton Club Lounge (incl.)';
+  const all = [].concat(RESTAURANTS, QC_RESTAURANTS, toArr(extras.places.mtl), toArr(extras.places.qc));
+  const hit = all.find(o=>o && o.id===id);
+  return hit ? hit.name : id;
+}
+function mealSuggestions(city, meal){
+  const arr = city==='mtl' ? RESTAURANTS : QC_RESTAURANTS;
+  const slot = city==='mtl' ? 'eat' : 'eatqc';
+  const voted = arr.filter(o=>{ const i=REST_INFO[o.id]; return i && matchMeal(meal,i.meal) && tallyFor(slot,o.id).length>=1; })
+                   .map(o=>({id:o.id,name:o.name,n:tallyFor(slot,o.id).length}))
+                   .sort((a,b)=>b.n-a.n);
+  const custom = toArr(extras.places[city]).filter(p=>p.meal===meal).map(p=>({id:p.id,name:p.name,n:tallyFor(slot,p.id).length}));
+  return voted.concat(custom).slice(0,6);
+}
+function mealsBlock(day){
+  const city = dayCityOf(day);
+  let h = `<div class="meals"><div class="slot-lbl">🍽 Meals — tap to slot a pick (from your top lists)</div>`;
+  ['breakfast','lunch','dinner'].forEach(meal=>{
+    const key = day.id+':'+meal, picked = extras.assign && extras.assign[key];
+    h += `<div class="mealrow"><span class="meallbl">${MEAL_LABEL[meal]}</span>`;
+    if(picked){
+      h += `<span class="mealpick">📌 ${placeName(picked,city)}</span>${me_voter?`<button class="mealx" onclick="unassignMeal('${day.id}','${meal}')">✕</button>`:''}`;
+    } else {
+      let chips = '';
+      if(meal==='breakfast' && city==='mtl' && me_voter){ chips += `<button class="mealchip" onclick="assignMeal('${day.id}','breakfast','clublounge')">+ Club Lounge</button>`; }
+      if(me_voter){ chips += mealSuggestions(city,meal).map(s=>`<button class="mealchip" onclick="assignMeal('${day.id}','${meal}','${s.id}')">+ ${s.name}</button>`).join(''); }
+      if(!chips) chips = `<span class="mealhint">— or add your own below</span>`;
+      h += chips;
+      if(me_voter){
+        const boxId='addbox-'+day.id+'-'+meal, inId='addin-'+day.id+'-'+meal;
+        h += `<button class="mealchip addown" onclick="toggleAdd('${boxId}')">＋ Add your own</button>`;
+        h += `<div class="mealadd" id="${boxId}" style="display:none">
+                <input class="addinput" id="${inId}" placeholder="Type a place name…" onclick="event.stopPropagation()" />
+                <button class="addbtn ghost" onclick="searchFor('${inId}','${city}')">🔎 Look it up</button>
+                <button class="addbtn" onclick="addMealPlace('${day.id}','${meal}','${city}')">Add to ${MEAL_LABEL[meal]}</button>
+              </div>`;
+      }
+    }
+    h += `</div>`;
+  });
+  h += `</div>`;
+  return h;
+}
+function addPlaceBox(city){
+  return `<div class="addplace">
+    <input id="addname-${city}" class="addinput" placeholder="Add a place by name…" onclick="event.stopPropagation()" />
+    <select id="addmeal-${city}" class="addsel" onclick="event.stopPropagation()"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner" selected>Dinner</option></select>
+    <button class="addbtn" onclick="event.stopPropagation();addPlace('${city}')">+ Add</button>
+  </div>`;
+}
+window.addPlace = function(city){
+  const nameEl=document.getElementById('addname-'+city), mealEl=document.getElementById('addmeal-'+city);
+  const name=((nameEl&&nameEl.value)||'').trim(); if(!name){ toast('Type a place name first'); return; }
+  const meal=mealEl?mealEl.value:'dinner';
+  const cityName = city==='mtl'?'Montreal':'Quebec City';
+  const place={ id:'c'+Date.now().toString(36), name, meal, desc:(MEAL_LABEL[meal]+' · added by the family'), cost:'—', q:name+' '+cityName };
+  extras.places[city] = toArr(extras.places[city]).concat(place);
+  Store.setExtras(extras); if(nameEl) nameEl.value=''; toast('Added '+name); render();
+};
+window.assignMeal = function(dayId,meal,optId){ if(!me_voter){ toast('Pick your name first'); return; } extras.assign=extras.assign||{}; extras.assign[dayId+':'+meal]=optId; Store.setExtras(extras); render(); };
+window.unassignMeal = function(dayId,meal){ if(extras.assign) delete extras.assign[dayId+':'+meal]; Store.setExtras(extras); render(); };
+window.toggleAdd = function(boxId){ const el=document.getElementById(boxId); if(el) el.style.display = (el.style.display==='none'||!el.style.display)?'flex':'none'; };
+window.searchFor = function(inId,city){ const el=document.getElementById(inId); const v=((el&&el.value)||'').trim(); if(!v){ toast('Type a place name first'); return; } const where=city==='qc'?'Quebec City':'Montreal'; window.open('https://www.google.com/search?q='+encodeURIComponent(v+' '+where),'_blank','noopener'); };
+window.addMealPlace = function(dayId,meal,city){
+  const el=document.getElementById('addin-'+dayId+'-'+meal);
+  const name=((el&&el.value)||'').trim(); if(!name){ toast('Type a place name first'); return; }
+  const cityName = city==='mtl'?'Montreal':'Quebec City';
+  const place={ id:'c'+Date.now().toString(36), name, meal, desc:(MEAL_LABEL[meal]+' · added by the family'), cost:'—', q:name+' '+cityName };
+  extras.places[city] = toArr(extras.places[city]).concat(place);
+  extras.assign = extras.assign||{}; extras.assign[dayId+':'+meal] = place.id;
+  Store.setExtras(extras); toast('Added '+name); render();
+};
+
 function render(){
   const y=window.scrollY;
   document.querySelectorAll('.person').forEach(p=>p.classList.toggle('active', p.dataset.n===me_voter));
@@ -686,8 +788,10 @@ function render(){
 
   // --- Where to eat — Montréal (collapsible) ---
   const eatSlot = {id:'eat', multi:true, opts:RESTAURANTS};
-  let mtlEat = `<div class="ticket"><div class="intro" style="padding-top:14px">Tap every spot you\u2019d be happy with — the winners get aimed at the open dinner nights. 📱 TikTok and 🔎 links on each.</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
+  let mtlEat = `<div class="ticket"><div class="intro" style="padding-top:14px">Tap every spot you\u2019d be happy with — winners feed the meal slots on each day below (by meal type). Add your own with “+ Add a place.”</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
   RESTAURANTS.forEach(o=> mtlEat += optHTML(eatSlot,o));
+  toArr(extras.places.mtl).forEach(o=> mtlEat += optHTML(eatSlot,o));
+  mtlEat += addPlaceBox('mtl');
   mtlEat += `</div></div>`;
   html += panel('eatmtl','Where to eat — Montréal','Pick all', mtlEat);
 
@@ -722,6 +826,8 @@ function render(){
       const eatSlot={id:day.id, multi:true, opts:day.restaurants};
       let qcEat = `<div class="ticket"><div class="intro" style="padding-top:14px">${day.intro}</div><div class="slot"><div class="slot-lbl">Tap as many as you like</div>`;
       day.restaurants.forEach(o=> qcEat += optHTML(eatSlot,o));
+      toArr(extras.places.qc).forEach(o=> qcEat += optHTML(eatSlot,o));
+      qcEat += addPlaceBox('qc');
       qcEat += `</div></div>`;
       html += panel('eatqc', day.title, 'Pick all', qcEat);
       return;
@@ -730,10 +836,13 @@ function render(){
     html += `<div class="ticket${savLocked?' locked':''}${day.travel?' travelcard':''}">`;
     html += `<div class="stub-top"><span class="date">${day.date}</span><span class="dtitle">${day.title}</span><span class="grp">${day.travel?'🚗 Drive':(day.group==='trio'?'V · E · Sierra':'All four')}</span></div><div class="perf"></div>`;
     if(day.pin) html += `<div class="pin">${day.pin}</div>`;
-    if(day.locked){ (Array.isArray(day.locked)?day.locked:[day.locked]).forEach(function(L){ html += `<div class="locktag">${L}</div>`; }); }
     if(day.travel && day.timeline){ html += `<div class="intro">Travel day — the shape of it:</div><ul class="timeline">${day.timeline.map(t=>`<li>${t}</li>`).join('')}</ul>`; }
     if(savLocked){ html += `<div class="note">Before you land — Vanessa, Erik & Sierra are choosing this one.</div>`; }
-    else if(day.slots){ day.slots.forEach(slot=>{ slot.multi = !slot.single; html += `<div class="slot"><div class="slot-lbl">${slot.label}</div>`; slot.opts.forEach(o=> html += optHTML(slot,o)); html += `</div>`; }); }
+    else {
+      if(!day.travel) html += mealsBlock(day);
+      if(day.slots){ day.slots.forEach(slot=>{ slot.multi = !slot.single; html += `<div class="slot"><div class="slot-lbl">${slot.label}</div>`; slot.opts.forEach(o=> html += optHTML(slot,o)); html += `</div>`; }); }
+    }
+    if(day.locked){ html += `<div class="evening-lbl">🌙 Evening — confirmed</div>`; (Array.isArray(day.locked)?day.locked:[day.locked]).forEach(function(L){ html += `<div class="locktag">${L}</div>`; }); }
     if(day.note) html += `<div class="note">${day.note}</div>`;
     html += `</div>`;
   });
